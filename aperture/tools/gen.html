@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><style>html,body{margin:0;background:#111}canvas{display:block}</style></head>
+<body>
+<canvas id="c"></canvas>
+<script type="x-shader/x-fragment" id="fs">#version 300 es
+precision highp float;
+out vec4 outColor;
+
+uniform vec2  uRes;
+uniform float uSeed;
+uniform int   uLook;   // 0 figure, 1 folds, 2 bokeh, 3 window, 4 displacement
+uniform float uScale;
+uniform float uContrast;
+uniform float uWarm;
+uniform float uGrain;
+uniform vec2  uLight;
+uniform float uExposure;
+uniform float uKey;    // how high-key the plate sits
+
+float hash21(vec2 p){
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float vnoise(vec2 p){
+  vec2 i = floor(p), f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash21(i);
+  float b = hash21(i + vec2(1.0, 0.0));
+  float c = hash21(i + vec2(0.0, 1.0));
+  float d = hash21(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+const mat2 M = mat2(1.62, 1.18, -1.18, 1.62);
+
+float fbm(vec2 p, int oct){
+  float s = 0.0, a = 0.5;
+  for (int i = 0; i < 6; i++){
+    if (i >= oct) break;
+    s += a * vnoise(p); p = M * p; a *= 0.5;
+  }
+  return s;
+}
+
+
+
+
+vec3 tone(float L){
+  vec3 deep = vec3(0.086, 0.076, 0.068);
+  vec3 lo   = vec3(0.310, 0.298, 0.286);
+  vec3 mid  = vec3(0.706, 0.686, 0.659);
+  vec3 hi   = vec3(0.980, 0.970, 0.953);
+  vec3 c = mix(deep, lo, smoothstep(0.0, 0.30, L));
+  c = mix(c, mid, smoothstep(0.22, 0.66, L));
+  c = mix(c, hi,  smoothstep(0.60, 1.0, L));
+  c.r += uWarm * 0.040 * smoothstep(0.35, 1.0, L);
+  c.b -= uWarm * 0.026 * smoothstep(0.35, 1.0, L);
+  c.b += uWarm * 0.030 * (1.0 - smoothstep(0.0, 0.42, L));
+  return c;
+}
+
+void main(){
+  vec2 frag = gl_FragCoord.xy;
+  vec2 uv = frag / uRes;
+  float agp = uRes.x / uRes.y;
+  vec2 auv = vec2(uv.x * agp, uv.y);
+  float L = 0.5;
+
+  if (uLook == 4){
+    float v = fbm(auv * uScale + uSeed, 5);
+    float w = fbm(auv * uScale * 2.03 + 11.0, 4);
+    outColor = vec4(vec3(clamp(v * 0.72 + w * 0.28, 0.0, 1.0)), 1.0);
+    return;
+  }
+
+  // atmosphere shared by every plate: soft light falling across the frame
+  float air = fbm(auv * 1.6 + uSeed, 3);
+  float fall = mix(1.0, 0.70, smoothstep(-0.2, 1.15, uv.y * 0.42 + (1.0 - uv.x) * 0.64));
+
+  if (uLook == 1){
+    // satin folds: large forms, real specular ridges along the light direction
+    float stretch = mix(0.22, 0.70, hash21(vec2(uSeed, 17.0)));
+    vec2 p = auv * uScale + uSeed;
+    vec2 st = vec2(p.x * stretch, p.y * 1.05);
+    vec2 q = vec2(fbm(st, 3), fbm(st + 5.2, 3));
+    float h = fbm(st + 1.9 * q, 4);
+
+    float e = 2.0 / uRes.y * uScale;
+    float hx = fbm(vec2((auv.x + e) * uScale + uSeed, p.y) * vec2(stretch, 1.05) + 1.9 * q, 4) - h;
+    float slope = hx / e;
+
+    float lit = clamp(0.5 + slope * 0.30 * (uLight.x < 0.0 ? -1.0 : 1.0), 0.0, 1.0);
+    float spec = pow(lit, 4.0);
+    L = ((0.44 + 0.46 * h) * 0.68 + lit * 0.34 + spec * 0.28) * fall;
+  }
+  else if (uLook == 2){
+    // defocused highlights
+    float base = 0.34 + 0.30 * air;
+    float acc = 0.0;
+    for (int i = 0; i < 34; i++){
+      float fi = float(i);
+      vec2 cpt = vec2(hash21(vec2(fi, uSeed)), hash21(vec2(fi + 31.7, uSeed + 5.0)));
+      cpt.x *= agp;
+      float rad = mix(0.035, 0.170, hash21(vec2(fi + 77.0, uSeed)));
+      float amp = mix(0.10, 0.62, hash21(vec2(fi + 12.3, uSeed + 2.0)));
+      float d = length(auv - cpt) / rad;
+      float disc = smoothstep(1.0, 0.55, d);
+      float rim  = smoothstep(1.02, 0.86, d) - smoothstep(0.86, 0.62, d);
+      acc += amp * (disc * 0.72 + rim * 0.5);
+    }
+    L = clamp(base + acc * 0.42, 0.0, 1.4) * fall;
+  }
+  else {
+    // window light thrown across a plaster wall, penumbra softening with distance
+    float rot   = (hash21(vec2(uSeed, 2.0)) - 0.5) * 0.44;
+    float skew  = (hash21(vec2(uSeed, 6.0)) - 0.5) * 0.55;
+    float nx    = floor(1.0 + hash21(vec2(uSeed, 21.0)) * 2.99);
+    float ny    = floor(1.0 + hash21(vec2(uSeed, 33.0)) * 2.99);
+    // often larger than the frame, so the crop cuts into the light
+    vec2  half2 = vec2(mix(0.30, 0.78, hash21(vec2(uSeed, 44.0))),
+                       mix(0.28, 0.72, hash21(vec2(uSeed, 52.0))));
+
+    vec2 p = auv - vec2(agp * 0.5, 0.5);
+    p += vec2((hash21(vec2(uSeed, 9.0)) - 0.5) * 0.90,
+              (hash21(vec2(uSeed, 4.0)) - 0.5) * 0.70);
+    p.x += p.y * skew;                       // projected, not pasted flat
+    float ct = cos(rot), st2 = sin(rot);
+    p = mat2(ct, -st2, st2, ct) * p;
+
+    vec2 dv = abs(p) - half2;
+    float rect = max(dv.x, dv.y);
+    float pen = mix(0.028, 0.120, smoothstep(0.6, -0.55, p.y));
+    float pane = smoothstep(pen, -pen, rect);
+
+    // mullions on a real grid, thickness held in frame units
+    vec2 u = (p + half2) / (2.0 * half2);
+    float fx = fract(u.x * nx), fy = fract(u.y * ny);
+    float dxp = min(fx, 1.0 - fx) / nx * (2.0 * half2.x);
+    float dyp = min(fy, 1.0 - fy) / ny * (2.0 * half2.y);
+    float bar = max(smoothstep(0.020, 0.005, dxp), smoothstep(0.018, 0.005, dyp));
+    pane *= (1.0 - 0.80 * bar);
+
+    float wall = (0.40 + 0.16 * air) * fall;
+    L = wall + pane * 0.62;
+  }
+
+  L = pow(clamp(L * uExposure, 0.0, 1.5), uContrast);
+  L = mix(L, 0.62 + 0.38 * L, uKey);
+
+  vec3 c = tone(clamp(L, 0.0, 1.0));
+  float vig = smoothstep(1.40, 0.20, length((uv - 0.5) * vec2(agp, 1.0)) * 1.22);
+  c *= mix(0.82, 1.0, vig);
+  float g = hash21(frag + uSeed * 13.0) - 0.5;
+  c += g * uGrain * (0.55 + 0.85 * (1.0 - abs(clamp(L, 0.0, 1.0) * 2.0 - 1.0)));
+  outColor = vec4(clamp(c, 0.0, 1.0), 1.0);
+}
+</script>
+<script>
+const LOOKS = { folds: 1, bokeh: 2, window: 3, displacement: 4 };
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true, antialias: false });
+if (!gl) throw new Error('webgl2 unavailable');
+
+function compile(type, src){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+
+const vsSrc = `#version 300 es
+in vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, vsSrc));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, document.getElementById('fs').textContent.trim()));
+gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'a');
+gl.enableVertexAttribArray(loc);
+gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+const U = n => gl.getUniformLocation(prog, n);
+
+window.renderImage = function (spec) {
+  canvas.width = spec.w;
+  canvas.height = spec.h;
+  gl.viewport(0, 0, spec.w, spec.h);
+  gl.uniform2f(U('uRes'), spec.w, spec.h);
+  gl.uniform1f(U('uSeed'), spec.seed);
+  gl.uniform1i(U('uLook'), LOOKS[spec.look]);
+  gl.uniform1f(U('uScale'), spec.scale ?? 3.0);
+  gl.uniform1f(U('uContrast'), spec.contrast ?? 1.0);
+  gl.uniform1f(U('uWarm'), spec.warm ?? 1.0);
+  gl.uniform1f(U('uGrain'), spec.grain ?? 0.032);
+  gl.uniform1f(U('uExposure'), spec.exposure ?? 1.0);
+  gl.uniform2f(U('uLight'), spec.light?.[0] ?? -0.55, spec.light?.[1] ?? 0.62);
+  gl.uniform1f(U('uKey'), spec.key ?? 0.35);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.finish();
+  return true;
+};
+window.__ready = true;
+</script>
+</body>
+</html>
