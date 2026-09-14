@@ -581,6 +581,14 @@ dd { margin: 0; }
   color: var(--grey);
 }
 
+/* ── Embedded in a host frame ───────────────────────────────────────────── */
+
+/* A host that sizes its frame to the full content height makes 100svh the
+   height of the whole document, so the hero has to be capped, and a fixed
+   masthead would float over content the host is scrolling past. */
+.is-embedded .hero { height: min(100svh, 44rem); }
+.is-embedded .masthead { position: absolute; }
+
 /* ── Motion start states ────────────────────────────────────────────────── */
 
 .has-motion .hero-title .line > span { transform: translateY(102%); }

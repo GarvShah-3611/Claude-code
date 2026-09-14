@@ -14,6 +14,11 @@ gsap.registerPlugin(ScrollTrigger);
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// In a host frame the host owns the scroll, so this document's scroll position
+// never changes and scroll-position triggers would never fire.
+const embedded = window.self !== window.top;
+if (embedded) root.classList.add('is-embedded');
+
 const DISPLACEMENT = 'images/displacement.png';
 const HERO_PLATES = ['images/hero-02.jpg', 'images/hero-01.jpg', 'images/hero-03.jpg'];
 
@@ -53,21 +58,23 @@ if (reduced) {
   document.querySelector('[data-hero-canvas]')?.remove();
   wireForm();
 } else {
-  const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95 });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((t) => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
+  if (!embedded) {
+    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
 
-  document.querySelectorAll('a[href^="#"]').forEach((a) => {
-    a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href');
-      if (!id || id === '#') return;
-      const el = document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      lenis.scrollTo(el, { offset: -20, duration: 1.4 });
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        lenis.scrollTo(el, { offset: -20, duration: 1.4 });
+      });
     });
-  });
+  }
 
   /* Hero — ambient plate sequence behind the headline */
   const canvas = document.querySelector('[data-hero-canvas]');
@@ -99,6 +106,58 @@ if (reduced) {
     .fromTo('.hero-sub', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }, '-=0.85')
     .fromTo('.hero-foot', { opacity: 0 }, { opacity: 1, duration: 1.1, ease: 'power2.out' }, '-=0.95');
 
+  const REVEAL_TEXT = '.section-head > *, .plate figcaption, .service-body, .studio-body > *, [data-quote], .statement p';
+
+  const revealFrame = (frame, vars) => gsap.timeline(vars)
+    .fromTo(frame,
+      { clipPath: 'inset(0 0 100% 0)' },
+      { clipPath: 'inset(0 0 0% 0)', duration: 1.35, ease: 'power3.inOut' })
+    .fromTo(frame.querySelector('img'), { scale: 1.16 }, { scale: 1, duration: 1.7, ease: 'power3.out' }, 0);
+
+  const revealText = (el) => gsap.fromTo(el,
+    { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.15, ease: 'power3.out' });
+
+  if (embedded) {
+    /* The host scrolls, not this document, so reveals key off intersection
+       rather than scroll position — and anything the host frame never brings
+       into view is cleared outright rather than left hidden. */
+    const pending = new Set([
+      ...document.querySelectorAll('[data-frame]'),
+      ...document.querySelectorAll(REVEAL_TEXT),
+    ]);
+
+    const play = (el) => {
+      pending.delete(el);
+      if (el.matches('[data-frame]')) revealFrame(el); else revealText(el);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        play(entry.target);
+      });
+    }, { threshold: 0.02 });
+
+    pending.forEach((el) => io.observe(el));
+
+    window.setTimeout(() => {
+      io.disconnect();
+      pending.forEach((el) => {
+        if (el.matches('[data-frame]')) {
+          gsap.set(el, { clipPath: 'inset(0 0 0% 0)' });
+          gsap.set(el.querySelector('img'), { scale: 1 });
+        } else {
+          gsap.set(el, { opacity: 1, y: 0 });
+        }
+      });
+      pending.clear();
+      root.classList.remove('has-motion');
+    }, 1500);
+
+    wireForm();
+  } else {
+
   /* Hero parallax — the copy drifts up and out, the plate follows the scroll */
   gsap.to('.hero-copy', {
     yPercent: -22,
@@ -121,11 +180,7 @@ if (reduced) {
   document.querySelectorAll('[data-frame]').forEach((frame) => {
     const img = frame.querySelector('img');
 
-    gsap.timeline({ scrollTrigger: { trigger: frame, start: 'top 86%' } })
-      .fromTo(frame,
-        { clipPath: 'inset(0 0 100% 0)' },
-        { clipPath: 'inset(0 0 0% 0)', duration: 1.35, ease: 'power3.inOut' })
-      .fromTo(img, { scale: 1.16 }, { scale: 1, duration: 1.7, ease: 'power3.out' }, 0);
+    revealFrame(frame, { scrollTrigger: { trigger: frame, start: 'top 86%' } });
 
     gsap.fromTo(img,
       { yPercent: -5 },
@@ -179,4 +234,5 @@ if (reduced) {
 
   wireForm();
   window.addEventListener('load', () => ScrollTrigger.refresh());
+  }
 }
