@@ -14,8 +14,8 @@ gsap.registerPlugin(ScrollTrigger);
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const DISPLACEMENT = '/images/displacement.png';
-const HERO_PLATES = ['/images/hero-02.jpg', '/images/hero-01.jpg', '/images/hero-03.jpg'];
+const DISPLACEMENT = 'images/displacement.png';
+const HERO_PLATES = ['images/hero-02.jpg', 'images/hero-01.jpg', 'images/hero-03.jpg'];
 
 /* ── Enquiry form ─────────────────────────────────────────────────────── */
 
