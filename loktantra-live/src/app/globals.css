@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Loktantra Live — design tokens
+   Every value the site draws from lives here. Change a hex in @theme
+   and it propagates to every component; nothing hardcodes a color.
+   Contrast ratios noted against Midnight Ink (#0E0E12) and Charcoal
+   (#1A1A22) are measured, not estimated — see README.
+------------------------------------------------------------------ */
+
+@theme {
+  /* --- Color -------------------------------------------------- */
+  /* Base surfaces */
+  --color-ink: #0e0e12; /* Midnight Ink — page ground */
+  --color-ink-raised: #14141a; /* between ground and card */
+  --color-surface: #1a1a22; /* Charcoal — cards */
+  --color-surface-hi: #22222c; /* card hover */
+
+  /* Text */
+  --color-newsprint: #f4f1ea; /* 17.08:1 on ink — AAA */
+  --color-ash: #9a97a3; /* 6.72:1 on ink — AA */
+  --color-ash-dim: #6f6c79; /* decorative rules only, never text */
+
+  /* Accent — the voter's indelible ink mark */
+  --color-violet: #8b5cf6; /* fills, glows, rules, large numerals */
+  --color-violet-light: #a78bfa; /* 7.08:1 on ink — text-safe accent */
+  --color-violet-deep: #6d3ee8; /* gradient partner, never text */
+
+  /* Functional only */
+  --color-signal: #e63946; /* 4.62:1 on ink — LIVE badge, errors */
+
+  /* Borders */
+  --color-hairline: rgba(244, 241, 234, 0.08);
+  --color-hairline-hi: rgba(244, 241, 234, 0.16);
+  --color-glow: rgba(139, 92, 246, 0.14);
+
+  /* --- Type --------------------------------------------------- */
+  --font-display: var(--font-bricolage), "Arial Black", sans-serif;
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+
+  /* Fluid display scale — clamp(min, preferred, max) */
+  /* Sized so the longest hero line ("Where young India", 17 characters)
+     clears the container at every width without wrapping — a wrapped line
+     inside an overflow mask disappears entirely. */
+  --text-mega: clamp(2.125rem, 8.4vw, 7.5rem);
+  --text-mega--line-height: 0.9;
+  --text-mega--letter-spacing: -0.035em;
+
+  --text-display: clamp(2.25rem, 5.5vw, 4.5rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-lead: clamp(1.0625rem, 1.5vw, 1.375rem);
+  --text-lead--line-height: 1.5;
+
+  /* --- Radii -------------------------------------------------- */
+  --radius-card: 1.5rem;
+  --radius-tile: 1rem;
+  --radius-pill: 999px;
+
+  /* --- Motion ------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-quick: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    background-color: var(--color-ink);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Lenis owns scrolling; native smooth-scroll would fight it. The
+     fallback matters because Lenis is disabled under reduced motion. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-newsprint);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 90%;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One focus treatment for the whole site. Violet at 4.55:1 on ink
+     stays visible against every surface we actually use. */
+  :focus-visible {
+    outline: 2px solid var(--color-violet-light);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--color-violet);
+    color: var(--color-ink);
+  }
+
+  button,
+  a,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  /* Reserve space so images never shift layout in. */
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------ */
+
+@utility container-page {
+  width: 100%;
+  max-width: 82.5rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 3.5rem;
+  }
+}
+
+/* Glass card: translucent charcoal, hairline edge, inner top highlight.
+   The inset shadow is what reads as "glass" — without it the card is
+   just a flat rounded rectangle. */
+@utility glass {
+  background: color-mix(in oklab, var(--color-surface) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--color-hairline);
+  box-shadow:
+    inset 0 1px 0 0 rgba(244, 241, 234, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Text that sits on the violet fill must be ink, not newsprint:
+   newsprint-on-violet measures 3.75:1 and fails AA. */
+@utility on-violet {
+  color: var(--color-ink);
+}
+
+/* Animated start states.
+   These deliberately use `transform`, not Tailwind's translate utilities:
+   Tailwind v4 compiles `translate-y-*` to the standalone `translate`
+   property, which composes on top of `transform` rather than being
+   overridden by it — so a GSAP tween on `y` would never clear it.
+
+   The offsets are scoped to [data-hero="idle"], the state the section is
+   rendered in on the server. The moment GSAP takes ownership it flips the
+   attribute, so the rule stops applying and there is nothing left to
+   reassert itself when a tween clears its inline transform at the end.
+   Without that flip the headline snaps back under its mask on completion. */
+
+[data-hero="idle"] .hero-line {
+  transform: translate3d(0, 100%, 0);
+}
+
+[data-hero="idle"] .hero-fade {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+
+@utility hero-line {
+  will-change: transform;
+}
+
+@utility hero-fade {
+  will-change: opacity, transform;
+}
+
+/* Scroll-reveal start state. GSAP animates to the cleared state; if JS
+   never runs, `no-js` on <html> keeps content visible for crawlers. */
+@utility reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  will-change: opacity, transform;
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion — one switch for the whole site.
+   GSAP and Motion are configured separately in JS; this covers the
+   CSS-driven marquee, the live dot, and any transition we forgot.
+------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .hero-fade,
+  .hero-line {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* No-JS: never leave the page blank because GSAP did not load. */
+.no-js .reveal,
+.no-js .hero-fade,
+.no-js .hero-line {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------
+   The ink mark on the wordmark: a slow breath, not a blink. Paused
+   under reduced motion by the global rule above.
+------------------------------------------------------------------ */
+
+@keyframes lk-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--color-glow);
+  }
+  50% {
+    opacity: 0.72;
+    box-shadow: 0 0 0 0.22em rgba(139, 92, 246, 0);
+  }
+}
+
+/* Marquee for the wire ticker. Duration is set per-instance so the speed
+   can follow the content length rather than being fixed. */
+@keyframes lk-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}

@@ -1,1 +1,8 @@
 node_modules/
+
+# Python bytecode from the vendored skill scripts
+__pycache__/
+*.pyc
+
+# Screenshot output from tools/shoot.mjs
+loktantra-live/shots/
