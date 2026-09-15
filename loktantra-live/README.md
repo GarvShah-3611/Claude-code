@@ -4,7 +4,7 @@ Single-page site for a youth-led digital publication covering protest, policy an
 Indian democracy.
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · GSAP + ScrollTrigger ·
-Motion · Lenis · React Three Fiber.
+Motion · Lenis · React Three Fiber + drei.
 
 ```bash
 npm install
@@ -63,24 +63,33 @@ All tokens are in the `@theme` block at the top of
 [`src/app/globals.css`](src/app/globals.css). Change a hex there and it
 propagates everywhere; no component hardcodes a colour.
 
-| Token | Value | Measured on `--color-ink` |
+| Token | Value | Measured on `--color-paper` |
 |---|---|---|
-| `--color-ink` | `#0e0e12` | page ground |
-| `--color-surface` | `#1a1a22` | cards |
-| `--color-newsprint` | `#f4f1ea` | **17.08:1** — AAA |
-| `--color-ash` | `#9a97a3` | **6.72:1** — AA |
-| `--color-ash-dim` | `#6f6c79` | **3.75:1 — fails AA, never use for text** |
-| `--color-violet` | `#8b5cf6` | **4.55:1** — AA, fills and large type only |
-| `--color-violet-light` | `#a78bfa` | **7.08:1** — the text-safe accent |
-| `--color-signal` | `#e63946` | **4.62:1** — LIVE badge and errors only |
+| `--color-paper` | `#faf6f2` | page ground — warm ivory, not white |
+| `--color-surface` | `#ffffff` | cards |
+| `--color-ink` | `#241520` | **16.23:1** — AAA |
+| `--color-ash` | `#6a5560` | **6.34:1** — AA |
+| `--color-ash-dim` | `#9a8a93` | **3.04:1 — fails AA, never use for text** |
+| `--color-burgundy` | `#7a1e3c` | **9.40:1** — AAA as text *and* as a fill |
+| `--color-burgundy-deep` | `#5c1229` | **12.41:1** — hover and pressed |
+| `--color-lavender` | `#c3b0df` | **1.84:1 — never text.** Washes, glows, chips |
+| `--color-lavender-ink` | `#5e4795` | **6.95:1** — the text-safe lavender |
+| `--color-signal` | `#b4291f` | **5.96:1** — form errors only |
 
-Two traps worth knowing before you swap anything:
+The accent is split on purpose. **Burgundy** is the brand's voice: CTAs,
+section rules, every hover and focus state. **Lavender-ink** is the quieter
+second accent — story kickers, feed formats, result metrics — so lavender
+lives in the type and not only in background washes.
 
-- **`#8b5cf6` on a card is 4.08:1 and fails AA for small text.** Small violet
-  text uses `--color-violet-light`. Keep that split if you change the accent.
-- **Newsprint on a violet fill is 3.75:1 and fails.** Filled CTAs put *ink* text
-  on violet (4.55:1) via the `on-violet` utility. If you pick a lighter accent,
-  re-check which direction passes.
+Three traps before you swap anything:
+
+- **Lavender fails as text on every surface here (1.84:1).** It is for fills
+  and washes. A *filled* lavender chip is fine — ink on lavender is 8.81:1.
+- **Labels on the burgundy fill must be light.** Paper on burgundy is 9.40:1;
+  ink on burgundy is 1.73:1. The `on-burgundy` utility handles this.
+- **A colour map multiplies with the material colour in three.js.** The gavel's
+  wood carries its colour in the texture and its materials sit at white. Tint
+  both and you darken twice — the first pass rendered near-black.
 
 After changing any colour, re-run the audit — it checks contrast for real:
 
@@ -117,23 +126,33 @@ for a photo.
 
 ### The 3D hero
 
-[`ColonnadeScene.tsx`](src/components/three/ColonnadeScene.tsx) is a ring of 28
-instanced columns under a shallow dome — Parliament's circular colonnade, drawn
-so it also reads as a broadcast record ring. It is generated from primitives, so
-there is no model file to download.
+[`GavelScene.tsx`](src/components/three/GavelScene.tsx) is a rosewood gavel
+and sound block. Everything is generated at runtime — there is no model file
+and no texture file:
+
+- **Shapes** are `latheGeometry` profiles, because a gavel is a turned object
+  in real life. Chamfers and the incised band grooves cost only extra points.
+- **Wood** comes from [`wood.ts`](src/components/three/wood.ts), which draws
+  growth rings, pore lines and a matching roughness map to a canvas.
+- **Reflections** come from an `<Environment>` built out of `<Lightformer>`s.
+  drei's HDR presets fetch from a CDN this project cannot reach, and a glossy
+  surface with nothing to reflect renders flat. The env scene sets its own
+  background colour: leave it black and every gloss reflects a hard light/dark
+  edge that reads as a seam across the object.
+- **The 360** is `<OrbitControls>` — drag to turn it, and it auto-rotates when
+  left alone. Zoom and pan are off so it cannot be lost off-frame.
 
 It loads only when the viewport is ≥768px with a fine pointer, the device
-reports ≥4 cores, motion is not reduced, and the hero is on screen; it unmounts
-when scrolled away. Everything else gets
-[`ColonnadeFallback.tsx`](src/components/three/ColonnadeFallback.tsx), an SVG
-twin in the same box, so the layout never shifts between them.
+reports ≥4 cores, motion is not reduced, and the hero is on screen; it
+unmounts when scrolled away. Everything else gets
+[`GavelFallback.tsx`](src/components/three/GavelFallback.tsx), an SVG twin in
+the same box, so the layout never shifts between them. Keep the two in the
+same hue — they swap places on one page, and a colour difference reads as a
+bug.
 
-There is no environment map — drei's presets fetch from a CDN. That is why the
-materials are low-metalness: a metal surface with nothing to reflect renders
-black. If you add an environment, raise `metalness` and drop the light
-intensities.
-
----
+Because the gavel is draggable it keeps its pointer events, unlike a purely
+decorative visual. It sits at `z-0` so the headline and CTAs stay clickable
+over it.
 
 ## Wiring up the forms
 
@@ -194,12 +213,12 @@ Lighthouse, median of three runs (it varies by a few points per run):
 | | Performance | Accessibility | Best practices | SEO |
 |---|---|---|---|---|
 | Desktop | 100 | 100 | 100 | 100 |
-| Mobile | 91 | 100 | 100 | 100 |
+| Mobile | 90 | 100 | 100 | 100 |
 
 axe-core reports zero WCAG 2.1 AA violations at both widths, with and without
 reduced motion, and every keyboard stop shows a visible focus ring.
 
-Mobile LCP sits at ~3.4s and is the hero headline waiting on the display font —
+Mobile LCP sits at ~3.5s and is the hero headline waiting on the display font —
 that is the remaining lever if you want to push performance higher. Self-hosting
 a subset of Bricolage containing only the characters the hero uses would be the
 next step.

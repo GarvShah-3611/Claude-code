@@ -2,11 +2,11 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { ColonnadeFallback } from "./ColonnadeFallback";
+import { GavelFallback } from "./GavelFallback";
 
-const ColonnadeScene = dynamic(() => import("./ColonnadeScene"), {
+const GavelScene = dynamic(() => import("./GavelScene"), {
   ssr: false,
-  loading: () => <ColonnadeFallback />,
+  loading: () => <GavelFallback />,
 });
 
 /**
@@ -50,10 +50,10 @@ export function HeroVisual() {
       {/* Glow sits behind both states so the composition is identical. */}
       <div
         aria-hidden
-        className="absolute left-1/2 top-1/2 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lavender/60 blur-[90px]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lavender/60 blur-[90px]"
       />
       <div className="absolute inset-0">
-        {show3d ? <ColonnadeScene /> : <ColonnadeFallback />}
+        {show3d ? <GavelScene /> : <GavelFallback />}
       </div>
     </div>
   );

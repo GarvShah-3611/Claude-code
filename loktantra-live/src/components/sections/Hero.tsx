@@ -9,7 +9,7 @@ import { gsap, registerGsap, motionDisabled, DUR, EASE } from "@/lib/motion";
 /**
  * The one orchestrated moment on the page.
  *
- * The headline runs the full width of the container and the colonnade
+ * The headline runs the full width of the container and the gavel
  * nests into the negative space left by its ragged right edge, rather than
  * sitting in a column beside it — which is what lets the type stay
  * oversized instead of shrinking to share the row.
@@ -103,11 +103,13 @@ export function Hero() {
           ))}
         </h1>
 
-        {/* The colonnade, tucked into the space the short last line leaves.
-            Below lg it drops under the copy at full width instead. */}
+        {/* The gavel, tucked into the space the short last line leaves.
+            Below lg it drops under the copy at full width instead. It is
+            draggable, so unlike a decorative visual it keeps its pointer
+            events; z-0 keeps it behind the headline and the CTAs. */}
         <div
           data-fade
-          className="hero-fade pointer-events-none relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:absolute lg:bottom-[-2rem] lg:right-[3.5rem] lg:mt-0 lg:w-[42%] lg:max-w-[30rem]"
+          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:absolute lg:bottom-[-2rem] lg:right-[3.5rem] lg:mt-0 lg:w-[42%] lg:max-w-[30rem]"
         >
           <HeroVisual />
         </div>
