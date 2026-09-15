@@ -50,8 +50,8 @@ export function Work() {
   };
 
   const field =
-    "w-full rounded-tile border bg-ink/60 px-4 py-3.5 text-newsprint placeholder:text-ash-dim transition-colors";
-  const ok = "border-hairline-hi focus:border-violet-light";
+    "w-full rounded-tile border bg-paper/60 px-4 py-3.5 text-ink placeholder:text-ash-dim transition-colors";
+  const ok = "border-hairline-hi focus:border-burgundy";
   const bad = "border-signal";
 
   return (
@@ -67,11 +67,11 @@ export function Work() {
           <div className="glass rounded-card p-6 md:p-10">
             {sent ? (
               <div className="reveal flex items-start gap-4">
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-violet on-violet">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-burgundy on-burgundy">
                   <Icon name="arrow" className="h-4 w-4" />
                 </span>
                 <div>
-                  <h3 className="text-[1.5rem] text-newsprint">
+                  <h3 className="text-[1.5rem] text-ink">
                     {work.success.heading}
                   </h3>
                   <p className="mt-2 text-ash">{work.success.body}</p>

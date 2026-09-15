@@ -53,7 +53,7 @@ export function Voices() {
           <div className="glass relative overflow-hidden rounded-card p-8 md:p-14">
             <Icon
               name="quote"
-              className="h-9 w-9 text-violet opacity-70 md:h-11 md:w-11"
+              className="h-9 w-9 text-burgundy opacity-70 md:h-11 md:w-11"
             />
 
             {/* aria-live so the quote is announced when it changes, and a
@@ -68,11 +68,11 @@ export function Voices() {
                   exit={{ opacity: 0, x: direction * -24 }}
                   transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className="font-serif text-[1.375rem] leading-snug text-newsprint md:text-[1.875rem]">
+                  <p className="font-serif text-[1.375rem] leading-snug text-ink md:text-[1.875rem]">
                     {current.quote}
                   </p>
                   <footer className="mt-7 text-[0.9375rem]">
-                    <span className="text-newsprint">{current.name}</span>
+                    <span className="text-ink">{current.name}</span>
                     <span className="text-ash"> — {current.role}</span>
                   </footer>
                 </m.blockquote>
@@ -91,7 +91,7 @@ export function Voices() {
                       aria-current={i === index || undefined}
                       className={`block h-2 rounded-pill transition-[width,background-color] duration-300 ${
                         i === index
-                          ? "w-7 bg-violet"
+                          ? "w-7 bg-burgundy"
                           : "w-2 bg-ash-dim hover:bg-ash"
                       }`}
                     />
@@ -104,7 +104,7 @@ export function Voices() {
                   type="button"
                   onClick={() => go(index - 1)}
                   aria-label="Previous quote"
-                  className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi text-newsprint transition-colors hover:border-violet-light hover:text-violet-light"
+                  className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi text-ink transition-colors hover:border-burgundy hover:text-burgundy"
                 >
                   <Icon name="arrow" className="h-4 w-4 rotate-180" />
                 </button>
@@ -112,7 +112,7 @@ export function Voices() {
                   type="button"
                   onClick={() => go(index + 1)}
                   aria-label="Next quote"
-                  className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi text-newsprint transition-colors hover:border-violet-light hover:text-violet-light"
+                  className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi text-ink transition-colors hover:border-burgundy hover:text-burgundy"
                 >
                   <Icon name="arrow" className="h-4 w-4" />
                 </button>

@@ -47,7 +47,7 @@ export function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
         scrolled || open
-          ? "border-b border-hairline bg-ink/72 backdrop-blur-xl"
+          ? "border-b border-hairline bg-paper/72 backdrop-blur-xl"
           : "border-b border-transparent"
       }`}
     >
@@ -55,7 +55,7 @@ export function Navbar() {
         aria-label="Primary"
         className="container-page flex h-[4.5rem] items-center justify-between gap-6"
       >
-        <a href="#main" className="shrink-0 text-[1.0625rem] text-newsprint">
+        <a href="#main" className="shrink-0 text-[1.0625rem] text-ink">
           <Wordmark />
         </a>
 
@@ -64,12 +64,12 @@ export function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="group relative text-[0.9375rem] text-ash transition-colors duration-200 hover:text-newsprint"
+                className="group relative text-[0.9375rem] text-ash transition-colors duration-200 hover:text-ink"
               >
                 {link.label}
                 <span
                   aria-hidden
-                  className="absolute -bottom-1.5 left-0 h-px w-0 bg-violet transition-[width] duration-300 ease-[var(--ease-out-soft)] group-hover:w-full"
+                  className="absolute -bottom-1.5 left-0 h-px w-0 bg-burgundy transition-[width] duration-300 ease-[var(--ease-out-soft)] group-hover:w-full"
                 />
               </a>
             </li>
@@ -96,12 +96,12 @@ export function Navbar() {
           >
             <span aria-hidden className="relative block h-3 w-4">
               <span
-                className={`absolute left-0 block h-px w-full bg-newsprint transition-transform duration-300 ${
+                className={`absolute left-0 block h-px w-full bg-ink transition-transform duration-300 ${
                   open ? "top-1.5 rotate-45" : "top-0"
                 }`}
               />
               <span
-                className={`absolute left-0 block h-px w-full bg-newsprint transition-transform duration-300 ${
+                className={`absolute left-0 block h-px w-full bg-ink transition-transform duration-300 ${
                   open ? "top-1.5 -rotate-45" : "top-3"
                 }`}
               />
@@ -126,7 +126,7 @@ export function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="block border-b border-hairline py-4 font-display text-2xl text-newsprint"
+                    className="block border-b border-hairline py-4 font-display text-2xl text-ink"
                   >
                     {link.label}
                   </a>
@@ -136,7 +136,7 @@ export function Navbar() {
                 <a
                   href={nav.cta.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-pill bg-violet px-6 py-3.5 text-center font-medium on-violet"
+                  className="block rounded-pill bg-burgundy px-6 py-3.5 text-center font-medium on-burgundy"
                 >
                   {nav.cta.label}
                 </a>

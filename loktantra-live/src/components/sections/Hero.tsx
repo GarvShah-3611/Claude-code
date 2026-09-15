@@ -68,11 +68,11 @@ export function Hero() {
           direction of light rather than an even wash. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-40 -top-24 h-[34rem] w-[34rem] rounded-full bg-violet/12 blur-[130px]"
+        className="pointer-events-none absolute -left-40 -top-24 h-[34rem] w-[34rem] rounded-full bg-lavender/55 blur-[130px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 top-40 h-[30rem] w-[30rem] rounded-full bg-violet-deep/16 blur-[120px]"
+        className="pointer-events-none absolute -right-24 top-40 h-[30rem] w-[30rem] rounded-full bg-lavender/40 blur-[120px]"
       />
 
       <div className="container-page relative">
@@ -87,7 +87,7 @@ export function Hero() {
           {hero.badge}
         </p>
 
-        <h1 className="relative z-10 text-mega font-extrabold text-newsprint">
+        <h1 className="relative z-10 text-mega font-extrabold text-ink">
           {hero.headline.map((line) => (
             /* Each line gets its own overflow-hidden mask so the rise reads
                as type emerging from a rule, not a block sliding. The mask

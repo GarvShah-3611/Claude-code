@@ -52,7 +52,7 @@ export function Wordmark({
           style={{ left: STEM_LEFT, width: STEM_WIDTH, height: X_HEIGHT }}
         />
         <span
-          className="absolute rounded-full bg-violet"
+          className="absolute rounded-full bg-burgundy"
           style={{
             left: DOT_LEFT,
             bottom: DOT_BOTTOM,

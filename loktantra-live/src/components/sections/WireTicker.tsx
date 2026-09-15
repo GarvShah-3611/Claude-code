@@ -21,7 +21,7 @@ export function WireTicker() {
           <span className="px-6 text-sm text-ash">{item}</span>
           <span
             aria-hidden
-            className="h-1 w-1 shrink-0 rounded-full bg-violet"
+            className="h-1 w-1 shrink-0 rounded-full bg-burgundy"
           />
         </li>
       ))}
@@ -32,17 +32,17 @@ export function WireTicker() {
     <section
       id="ticker"
       aria-label={ticker.label}
-      className="relative border-y border-hairline bg-ink-raised py-4"
+      className="relative border-y border-hairline bg-paper-raised py-4"
     >
       {/* Edges fade into the page so headlines enter and leave rather than
           being chopped off at the viewport. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-ink-raised to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-paper-raised to-transparent"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-ink-raised to-transparent"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-paper-raised to-transparent"
       />
 
       <div className="flex overflow-hidden">

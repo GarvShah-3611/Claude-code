@@ -50,7 +50,7 @@ export function HeroVisual() {
       {/* Glow sits behind both states so the composition is identical. */}
       <div
         aria-hidden
-        className="absolute left-1/2 top-1/2 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet/25 blur-[90px]"
+        className="absolute left-1/2 top-1/2 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lavender/60 blur-[90px]"
       />
       <div className="absolute inset-0">
         {show3d ? <ColonnadeScene /> : <ColonnadeFallback />}

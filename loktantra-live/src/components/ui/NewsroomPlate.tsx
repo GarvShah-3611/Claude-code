@@ -17,17 +17,17 @@ function PlateDefs({ id }: { id: string }) {
   return (
     <defs>
       <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0.6" y2="1">
-        <stop offset="0%" stopColor="#241a45" />
-        <stop offset="55%" stopColor="#15111f" />
-        <stop offset="100%" stopColor="#0d0d13" />
+        <stop offset="0%" stopColor="#e9dded" />
+        <stop offset="55%" stopColor="#f6f0f3" />
+        <stop offset="100%" stopColor="#e3d6e7" />
       </linearGradient>
       <linearGradient id={`${id}-lit`} x1="0" y1="1" x2="0.3" y2="0">
-        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0" />
-        <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.85" />
+        <stop offset="0%" stopColor="#7a1e3c" stopOpacity="0" />
+        <stop offset="100%" stopColor="#c3b0df" stopOpacity="0.85" />
       </linearGradient>
       <radialGradient id={`${id}-flare`} cx="0.28" cy="0.2">
-        <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.26" />
-        <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+        <stop offset="0%" stopColor="#fbf7f3" stopOpacity="0.55" />
+        <stop offset="100%" stopColor="#fbf7f3" stopOpacity="0" />
       </radialGradient>
       {/* Film grain, so the flat fills do not band on large surfaces. */}
       <filter id={`${id}-grain`} x="0" y="0" width="100%" height="100%">
@@ -100,18 +100,18 @@ export function NewsroomPlate({ alt }: { alt: string }) {
       height={500}
     >
       {/* Back wall: a whiteboard catching the light from the left. */}
-      <rect x="46" y="86" width="196" height="132" rx="5" fill="#1d1a34" />
+      <rect x="46" y="86" width="196" height="132" rx="5" fill="#dccfe4" />
       <path
         d="M70 124h140M70 150h92M70 176h116"
-        stroke="#4b3f80"
+        stroke="#9a80bc"
         strokeWidth="4"
         strokeLinecap="round"
       />
-      <rect x="292" y="104" width="70" height="98" rx="5" fill="#1a172c" />
+      <rect x="292" y="104" width="70" height="98" rx="5" fill="#d3c3dd" />
 
       {/* Shared table, edge-lit. */}
-      <rect x="0" y="372" width="400" height="128" fill="#121119" />
-      <rect x="0" y="366" width="400" height="8" fill={`url(#${id}-lit)`} />
+      <rect x="0" y="408" width="400" height="92" fill="#8e2e4b" />
+      <rect x="0" y="402" width="400" height="7" fill={`url(#${id}-lit)`} />
 
       {/* Three figures, each behind a laptop. */}
       {[78, 200, 322].map((x, i) => {
@@ -120,28 +120,28 @@ export function NewsroomPlate({ alt }: { alt: string }) {
           <g key={x}>
             {/* Torso. */}
             <path
-              d={`M${x - 42} 372 q4 -70 42 -70 q38 0 42 70 Z`}
-              fill="#0f0e17"
+              d={`M${x - 42} 408 q4 -70 42 -70 q38 0 42 70 Z`}
+              fill="#5c1229"
             />
             {/* Head, tipped toward the screen. */}
-            <circle cx={x} cy={276 + lift} r="24" fill="#191527" />
+            <circle cx={x} cy={300 + lift} r="24" fill="#7a1e3c" />
             {/* Screen light catching one side of the face. */}
             <path
-              d={`M${x - 21} ${268 + lift} a24 24 0 0 1 17 -14`}
-              stroke="#a78bfa"
+              d={`M${x - 21} ${292 + lift} a24 24 0 0 1 17 -14`}
+              stroke="#c3b0df"
               strokeWidth="3"
               fill="none"
               opacity="0.75"
             />
             {/* Laptop. */}
-            <path d={`M${x - 34} 372 l9 -40 h50 l9 40 Z`} fill="#221f3a" />
+            <path d={`M${x - 34} 408 l9 -40 h50 l9 40 Z`} fill="#8e2e4b" />
             <rect
               x={x - 25}
-              y={338}
+              y={374}
               width="50"
               height="26"
               rx="3"
-              fill="#6d4fd8"
+              fill="#c3b0df"
               opacity="0.5"
             />
           </g>
@@ -149,7 +149,7 @@ export function NewsroomPlate({ alt }: { alt: string }) {
       })}
 
       {/* Pool of lamp light on the table. */}
-      <ellipse cx="200" cy="378" rx="150" ry="16" fill="#8b5cf6" opacity="0.14" />
+      <ellipse cx="200" cy="378" rx="150" ry="16" fill="#7a1e3c" opacity="0.14" />
     </Plate>
   );
 }
@@ -179,15 +179,15 @@ export function StoryPlate({
           { x: 318, y: 60, r: 11 },
         ].map((p) => (
           <g key={p.x} transform={`rotate(${p.r} ${p.x + 32} ${p.y + 28})`}>
-            <rect x={p.x + 28} y={p.y + 48} width="6" height="96" fill="#1c1c2c" />
+            <rect x={p.x + 28} y={p.y + 48} width="6" height="96" fill="#5c1229" />
             <rect
               x={p.x}
               y={p.y}
               width="64"
               height="52"
               rx="3"
-              fill="#2c2545"
-              stroke="#a78bfa"
+              fill="#efe7f2"
+              stroke="#c3b0df"
               strokeWidth="1.5"
               strokeOpacity="0.5"
             />
@@ -199,7 +199,7 @@ export function StoryPlate({
             cx={12 + i * 26}
             cy={244 + (i % 3) * 9}
             r={15 + (i % 4) * 2}
-            fill="#14141f"
+            fill="#7a1e3c"
           />
         ))}
         <rect x="0" y="236" width="400" height="4" fill={`url(#${id}-lit)`} />
@@ -209,9 +209,9 @@ export function StoryPlate({
     /* Students in a circle on campus steps at dusk. */
     campus: (
       <>
-        <path d="M0 300 L0 246 H400 V300 Z" fill="#16161f" />
-        <path d="M0 246 L0 212 H400 V246 Z" fill="#1b1b27" />
-        <path d="M0 212 L0 182 H400 V212 Z" fill="#20202e" />
+        <path d="M0 300 L0 246 H400 V300 Z" fill="#c9b6d6" />
+        <path d="M0 246 L0 212 H400 V246 Z" fill="#d6c6e0" />
+        <path d="M0 212 L0 182 H400 V212 Z" fill="#e3d6e9" />
         <rect x="0" y="180" width="400" height="3" fill={`url(#${id}-lit)`} />
         {/* Seated figures along the steps. */}
         {[
@@ -223,16 +223,16 @@ export function StoryPlate({
           [356, 234],
         ].map(([x, y]) => (
           <g key={x}>
-            <ellipse cx={x} cy={y + 18} rx="18" ry="20" fill="#101019" />
-            <circle cx={x} cy={y - 6} r="11" fill="#191926" />
+            <ellipse cx={x} cy={y + 18} rx="18" ry="20" fill="#5c1229" />
+            <circle cx={x} cy={y - 6} r="11" fill="#7a1e3c" />
           </g>
         ))}
         {/* One figure standing, speaking — the focal point. */}
-        <ellipse cx="200" cy="176" rx="17" ry="40" fill="#0d0d15" />
-        <circle cx="200" cy="126" r="13" fill="#241f3d" />
+        <ellipse cx="200" cy="176" rx="17" ry="40" fill="#5c1229" />
+        <circle cx="200" cy="126" r="13" fill="#7a1e3c" />
         <path
           d="M189 120a13 13 0 0 1 10-8"
-          stroke="#a78bfa"
+          stroke="#c3b0df"
           strokeWidth="2.5"
           fill="none"
         />
@@ -242,19 +242,19 @@ export function StoryPlate({
     /* A colonnade from below — the policy desk's plate. */
     colonnade: (
       <>
-        <path d="M0 64 H400 V96 H0 Z" fill="#20202e" />
+        <path d="M0 64 H400 V96 H0 Z" fill="#e3d6e9" />
         <path d="M0 58 H400 V66 H0 Z" fill={`url(#${id}-lit)`} />
         {Array.from({ length: 9 }, (_, i) => {
           const x = 14 + i * 45;
           const lit = i < 4 ? 1 - i * 0.18 : 0.18;
           return (
             <g key={i}>
-              <rect x={x} y="96" width="26" height="204" fill="#191924" />
-              <rect x={x} y="96" width="5" height="204" fill="#3b3356" opacity={lit} />
+              <rect x={x} y="96" width="26" height="204" fill="#7a1e3c" />
+              <rect x={x} y="96" width="5" height="204" fill="#c3b0df" opacity={lit} />
             </g>
           );
         })}
-        <rect x="0" y="286" width="400" height="14" fill="#101017" />
+        <rect x="0" y="286" width="400" height="14" fill="#5c1229" />
       </>
     ),
 
@@ -276,7 +276,7 @@ export function StoryPlate({
               width="46"
               height={h.h}
               rx="22"
-              fill="#15151f"
+              fill="#7a1e3c"
             />
             {/* Index finger, standing proud of the fist. */}
             <rect
@@ -285,7 +285,7 @@ export function StoryPlate({
               width="17"
               height="56"
               rx="8"
-              fill="#1d1d2b"
+              fill="#8e2e4b"
             />
             {/* The indelible ink mark. */}
             <rect
@@ -294,7 +294,7 @@ export function StoryPlate({
               width="17"
               height="15"
               rx="7"
-              fill="#8b5cf6"
+              fill="#241520"
             />
           </g>
         ))}

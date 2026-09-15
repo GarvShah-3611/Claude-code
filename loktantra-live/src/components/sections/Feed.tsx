@@ -30,7 +30,7 @@ export function Feed() {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="grow"
-            className="reveal group flex shrink-0 items-center gap-2 rounded-pill border border-hairline-hi px-5 py-2.5 text-[0.9375rem] text-newsprint transition-colors hover:border-violet-light hover:text-violet-light"
+            className="reveal group flex shrink-0 items-center gap-2 rounded-pill border border-hairline-hi px-5 py-2.5 text-[0.9375rem] text-ink transition-colors hover:border-burgundy hover:text-burgundy"
           >
             {feed.handle}
             <Icon
@@ -50,19 +50,19 @@ export function Feed() {
                 data-cursor="grow"
                 className="group relative flex aspect-square flex-col justify-end overflow-hidden rounded-card border border-hairline bg-surface p-5 transition-colors duration-300 hover:border-hairline-hi"
               >
-                {/* Violet wash that lifts on hover — the zoom cue without a
+                {/* Lavender wash that lifts on hover — the zoom cue without a
                     photograph to zoom. */}
                 <span
                   aria-hidden
-                  className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_0%,rgba(139,92,246,0.22),transparent_62%)] transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-110"
+                  className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_0%,rgba(195,176,223,0.42),transparent_62%)] transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-110"
                 />
 
-                <span className="relative flex items-center gap-2 text-xs text-violet-light">
+                <span className="relative flex items-center gap-2 text-xs text-lavender-ink">
                   <Icon name={typeIcon[item.type] ?? "layers"} className="h-4 w-4" />
                   {item.type}
                 </span>
 
-                <h3 className="relative mt-3 text-[1.0625rem] leading-snug text-newsprint md:text-[1.1875rem]">
+                <h3 className="relative mt-3 text-[1.0625rem] leading-snug text-ink md:text-[1.1875rem]">
                   {item.title}
                 </h3>
 

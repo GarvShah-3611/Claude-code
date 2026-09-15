@@ -16,7 +16,7 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0e0e12",
+          background: "#faf6f2",
           borderRadius: 7,
         }}
       >
@@ -25,7 +25,7 @@ export default function Icon() {
             width: 15,
             height: 15,
             borderRadius: 999,
-            background: "#8b5cf6",
+            background: "#7a1e3c",
           }}
         />
       </div>

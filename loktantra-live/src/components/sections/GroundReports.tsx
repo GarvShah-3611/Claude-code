@@ -107,13 +107,13 @@ export function GroundReports() {
                 </div>
 
                 <div className="mt-5 flex items-center gap-3 text-sm">
-                  <span className="rounded-pill border border-hairline-hi px-3 py-1 text-violet-light">
+                  <span className="rounded-pill border border-hairline-hi px-3 py-1 text-lavender-ink">
                     {item.kicker}
                   </span>
                   <span className="text-ash">{item.dateline}</span>
                 </div>
 
-                <h3 className="mt-4 text-[1.5rem] text-newsprint">
+                <h3 className="mt-4 text-[1.5rem] text-ink">
                   {item.title}
                 </h3>
                 {/* The dek is the one place the serif appears in this
@@ -123,8 +123,8 @@ export function GroundReports() {
                 </p>
 
                 <div className="mt-5 flex items-center justify-between border-t border-hairline pt-4 text-sm">
-                  <span className="text-violet-light">{item.metric}</span>
-                  <span className="flex items-center gap-2 text-ash transition-colors group-hover:text-newsprint">
+                  <span className="text-lavender-ink">{item.metric}</span>
+                  <span className="flex items-center gap-2 text-ash transition-colors group-hover:text-ink">
                     {item.readingTime}
                     <Icon
                       name="arrow"

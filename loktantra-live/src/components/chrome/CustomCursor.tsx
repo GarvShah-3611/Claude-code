@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, motionDisabled } from "@/lib/motion";
 
 /**
- * Desktop-only cursor: a small violet ink dot that grows into a ring over
+ * Desktop-only cursor: a small burgundy dot that grows into a ring over
  * anything marked `data-cursor="grow"` or natively interactive.
  *
  * Mounted only when the device has a real pointer, so touch users get the
@@ -83,11 +83,11 @@ export function CustomCursor() {
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[90]">
       <div
         ref={ring}
-        className="absolute -left-4 -top-4 h-8 w-8 rounded-full border border-violet-light opacity-0"
+        className="absolute -left-4 -top-4 h-8 w-8 rounded-full border border-burgundy opacity-0"
       />
       <div
         ref={dot}
-        className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-violet-light opacity-0"
+        className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-burgundy opacity-0"
       />
     </div>
   );

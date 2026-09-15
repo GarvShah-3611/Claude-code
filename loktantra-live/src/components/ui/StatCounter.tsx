@@ -54,7 +54,7 @@ export function StatCounter({
     <div className="reveal">
       <span
         ref={ref}
-        className="block font-display text-[clamp(2.75rem,6vw,4rem)] font-extrabold leading-none tracking-tight text-violet tabular-nums"
+        className="block font-display text-[clamp(2.75rem,6vw,4rem)] font-extrabold leading-none tracking-tight text-burgundy tabular-nums"
       >
         {value.toLocaleString("en-IN")}
         {suffix}

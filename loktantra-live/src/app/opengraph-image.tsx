@@ -21,9 +21,9 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0e0e12",
+          background: "#faf6f2",
           backgroundImage:
-            "radial-gradient(1000px 620px at 12% -10%, rgba(139,92,246,0.34), transparent 62%)",
+            "radial-gradient(1000px 620px at 12% -10%, rgba(195,176,223,0.75), transparent 62%)",
           padding: 72,
           fontFamily: "sans-serif",
         }}
@@ -34,10 +34,10 @@ export default function OpengraphImage() {
               width: 14,
               height: 14,
               borderRadius: 999,
-              background: "#8b5cf6",
+              background: "#7a1e3c",
             }}
           />
-          <div style={{ fontSize: 28, color: "#f4f1ea", letterSpacing: -0.5 }}>
+          <div style={{ fontSize: 28, color: "#241520", letterSpacing: -0.5 }}>
             {site.name}
           </div>
         </div>
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
             display: "flex",
             fontSize: 82,
             lineHeight: 1.04,
-            color: "#f4f1ea",
+            color: "#241520",
             letterSpacing: -3,
             maxWidth: 940,
           }}
@@ -55,7 +55,7 @@ export default function OpengraphImage() {
           {site.tagline}
         </div>
 
-        <div style={{ display: "flex", fontSize: 26, color: "#9a97a3" }}>
+        <div style={{ display: "flex", fontSize: 26, color: "#6a5560" }}>
           Protest, policy, and the pulse of Indian democracy
         </div>
       </div>

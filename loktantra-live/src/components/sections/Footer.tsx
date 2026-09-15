@@ -16,7 +16,7 @@ export function Footer() {
       <div className="container-page">
         <div className="grid gap-12 pb-16 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <Wordmark className="text-[1.375rem] text-newsprint" pulse={false} />
+            <Wordmark className="text-[1.375rem] text-ink" pulse={false} />
             <p className="mt-5 max-w-xs text-[0.9375rem] text-ash">
               {footer.blurb}
             </p>
@@ -32,7 +32,7 @@ export function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-[0.9375rem] text-ash transition-colors hover:text-newsprint"
+                      className="text-[0.9375rem] text-ash transition-colors hover:text-ink"
                     >
                       {link.label}
                     </a>
@@ -52,10 +52,10 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="grow"
-                  className="group flex items-center gap-2 rounded-pill border border-hairline-hi px-4 py-2 text-[0.9375rem] text-newsprint transition-colors hover:border-violet-light hover:text-violet-light"
+                  className="group flex items-center gap-2 rounded-pill border border-hairline-hi px-4 py-2 text-[0.9375rem] text-ink transition-colors hover:border-burgundy hover:text-burgundy"
                 >
                   {s.label}
-                  <span className="text-ash transition-colors group-hover:text-violet-light">
+                  <span className="text-ash transition-colors group-hover:text-burgundy">
                     {s.handle}
                   </span>
                   <Icon
@@ -87,7 +87,7 @@ export function Footer() {
             textAnchor="middle"
             textLength="1000"
             lengthAdjust="spacingAndGlyphs"
-            className="fill-newsprint/[0.07] font-display text-[132px] font-extrabold"
+            className="fill-ink/[0.07] font-display text-[132px] font-extrabold"
           >
             {footer.wordmark}
           </text>

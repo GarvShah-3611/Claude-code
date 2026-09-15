@@ -9,11 +9,11 @@ const base =
   "relative inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3 text-[0.9375rem] font-medium transition-colors duration-200 will-change-transform";
 
 const variants: Record<Variant, string> = {
-  /* Ink label on violet, not newsprint: newsprint-on-violet measures
-     3.75:1 and fails AA. Ink-on-violet measures 4.55:1. */
-  primary: "bg-violet on-violet hover:bg-violet-light",
+  /* Paper label on burgundy: 9.40:1. The reverse, ink on burgundy, is
+     1.73:1, so the light label is the only one that passes. */
+  primary: "bg-burgundy on-burgundy hover:bg-burgundy-deep",
   ghost:
-    "border border-hairline-hi text-newsprint hover:border-violet-light hover:text-violet-light",
+    "border border-hairline-hi text-ink hover:border-burgundy hover:text-burgundy",
 };
 
 /**

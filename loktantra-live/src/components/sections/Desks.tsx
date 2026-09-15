@@ -31,16 +31,16 @@ export function Desks() {
                     never intercepts the pointer. */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-violet/0 blur-3xl transition-colors duration-500 group-hover:bg-violet/25"
+                  className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-burgundy/0 blur-3xl transition-colors duration-500 group-hover:bg-burgundy/25"
                 />
 
-                <span className="relative flex h-11 w-11 items-center justify-center rounded-tile border border-hairline-hi text-violet-light transition-colors duration-300 group-hover:border-violet-light">
+                <span className="relative flex h-11 w-11 items-center justify-center rounded-tile border border-hairline-hi text-burgundy transition-colors duration-300 group-hover:border-burgundy">
                   <Icon name={item.icon as IconName} />
                 </span>
 
                 <div className="relative mt-8">
                   <h3
-                    className={`text-newsprint ${
+                    className={`text-ink ${
                       item.featured
                         ? "text-[1.75rem] md:text-[2.25rem]"
                         : "text-[1.375rem]"
