@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { hero } from "@/content/site";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { HeroVisual } from "@/components/three/HeroVisual";
-import { gsap, registerGsap, prefersReducedMotion, DUR, EASE } from "@/lib/motion";
+import { gsap, registerGsap, motionDisabled, DUR, EASE } from "@/lib/motion";
 
 /**
  * The one orchestrated moment on the page.
@@ -33,7 +33,7 @@ export function Hero() {
        transform and owns the whole value. */
     el.setAttribute("data-hero", "run");
 
-    if (prefersReducedMotion()) {
+    if (motionDisabled()) {
       gsap.set([...lines, ...rest], { yPercent: 0, y: 0, opacity: 1 });
       return;
     }

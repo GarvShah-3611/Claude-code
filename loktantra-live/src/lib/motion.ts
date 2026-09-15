@@ -33,6 +33,21 @@ export function prefersReducedMotion() {
 }
 
 /**
+ * True when motion should be skipped and content rendered in its final
+ * state: either the visitor asked for that, or the page was loaded with
+ * `?static=1`.
+ *
+ * The query flag exists for screenshots and audits. Without it the page
+ * height keeps changing as reveals fire and Lenis eases, and a stitched
+ * full-page capture ends up repeating bands of the page.
+ */
+export function motionDisabled() {
+  if (typeof window === "undefined") return false;
+  if (prefersReducedMotion()) return true;
+  return new URLSearchParams(window.location.search).has("static");
+}
+
+/**
  * Reveals `.reveal` descendants of `scope` once, on scroll.
  *
  * Reveals run once and never reverse: `toggleActions` is left at its
@@ -48,7 +63,7 @@ export function revealChildren(
   const targets = gsap.utils.toArray<HTMLElement>(selector, scope);
   if (!targets.length) return;
 
-  if (prefersReducedMotion()) {
+  if (motionDisabled()) {
     gsap.set(targets, { opacity: 1, y: 0, clearProps: "willChange" });
     return;
   }

@@ -12,7 +12,7 @@ import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
 
 const OUT = process.env.SHOT_DIR || "./shots";
-const URL = process.env.URL || "http://127.0.0.1:3000/";
+const URL = process.env.URL || "http://127.0.0.1:3000/?static=1";
 const WIDTHS = [
   { name: "desktop", w: 1440, h: 900 },
   { name: "tablet", w: 768, h: 1024 },
@@ -64,19 +64,26 @@ const run = async () => {
     // Let fonts settle and the hero timeline finish before capturing.
     await page.waitForTimeout(2200);
 
-    // Scroll the whole page once so every scroll-triggered reveal has fired,
-    // then return to the top. Otherwise sections below the fold shoot blank.
-    await page.evaluate(async () => {
-      const step = window.innerHeight * 0.8;
-      for (let y = 0; y < document.body.scrollHeight; y += step) {
-        window.scrollTo(0, y);
-        await new Promise((r) => setTimeout(r, 120));
-      }
-      window.scrollTo(0, 0);
-    });
-    await page.waitForTimeout(700);
+    /* No pre-scroll: ?static=1 renders every reveal in its final state, so
+       the page height is settled and the full-page capture does not stitch
+       a moving document (which repeated whole sections). */
 
-    await page.screenshot({ path: `${OUT}/${name}-full.png`, fullPage: true });
+    /* Bands rather than one fullPage image: Chromium's capture-beyond-
+       viewport repeats whole sections on a document this tall (~10,000px),
+       so a "full page" shot is not trustworthy here. Scrolling and taking
+       viewport-sized shots always matches what a visitor sees. */
+    if (!only) {
+      const total = await page.evaluate(() => document.documentElement.scrollHeight);
+      for (let i = 0, y = 0; y < total; i++, y += h) {
+        await page.evaluate((top) => window.scrollTo(0, top), y);
+        await page.waitForTimeout(260);
+        await page.screenshot({
+          path: `${OUT}/${name}-band-${String(i).padStart(2, "0")}.png`,
+        });
+      }
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(260);
+    }
 
     for (const id of SECTIONS) {
       if (only && id !== only) continue;

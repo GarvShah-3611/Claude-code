@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/motion";
+import { gsap, motionDisabled } from "@/lib/motion";
 
 type Variant = "primary" | "ghost";
 
@@ -43,7 +43,7 @@ export function MagneticButton({
   const bind = {
     onPointerMove: (e: React.PointerEvent) => {
       const el = ref.current;
-      if (!el || e.pointerType !== "mouse" || prefersReducedMotion()) return;
+      if (!el || e.pointerType !== "mouse" || motionDisabled()) return;
       if (!window.matchMedia("(hover: hover)").matches) return;
 
       const r = el.getBoundingClientRect();

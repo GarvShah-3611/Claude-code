@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
-import { registerGsap, prefersReducedMotion, ScrollTrigger, gsap } from "@/lib/motion";
+import { registerGsap, motionDisabled, ScrollTrigger, gsap } from "@/lib/motion";
 
 /**
  * Owns page-level motion setup:
@@ -21,7 +21,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     registerGsap();
 
-    if (prefersReducedMotion()) {
+    if (motionDisabled()) {
       // Still refresh once so any ScrollTrigger measurements are correct.
       ScrollTrigger.refresh();
       return;

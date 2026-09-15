@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, registerGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
+import { gsap, registerGsap, motionDisabled, ScrollTrigger } from "@/lib/motion";
 
 /**
  * Counts up once when scrolled into view.
@@ -23,7 +23,7 @@ export function StatCounter({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
+    if (!el || motionDisabled()) return;
     registerGsap();
 
     const counter = { n: 0 };

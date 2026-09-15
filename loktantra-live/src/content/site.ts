@@ -77,7 +77,7 @@ export const desks = {
       title: "Latest",
       body: "Everything we have published, newest first. Updated the moment a story clears its second read.",
       icon: "clock",
-      span: "md:col-span-2 md:row-span-1",
+      span: "lg:col-span-2",
       featured: false,
     },
     {
@@ -85,7 +85,7 @@ export const desks = {
       title: "Ground Reports",
       body: "Reporting from where it happened — protests, panchayats, picket lines and polling booths. We go, we watch, we file.",
       icon: "pin",
-      span: "md:col-span-2 md:row-span-2",
+      span: "lg:col-span-2 lg:row-span-2",
       featured: true,
     },
     {
@@ -93,7 +93,7 @@ export const desks = {
       title: "Explainers",
       body: "A bill, a judgment, a budget line — broken down against the primary document, with the document linked.",
       icon: "document",
-      span: "md:col-span-2 md:row-span-1",
+      span: "lg:col-span-2",
       featured: false,
     },
     {
@@ -101,7 +101,7 @@ export const desks = {
       title: "Youth Voices",
       body: "Opinion, argument and dissent from readers under thirty. Labelled as opinion, every time.",
       icon: "quote",
-      span: "md:col-span-2 md:row-span-1",
+      span: "lg:col-span-2",
       featured: false,
     },
     {
@@ -109,7 +109,7 @@ export const desks = {
       title: "Campus Watch",
       body: "Fee hikes, union elections, hostel rules and disciplinary orders — tracked across 31 campuses.",
       icon: "building",
-      span: "md:col-span-2 md:row-span-1",
+      span: "lg:col-span-2",
       featured: false,
     },
     {
@@ -117,7 +117,7 @@ export const desks = {
       title: "Write for Us",
       body: "Pitch a story. First-time writers are edited, not rejected. We pay for ground reports.",
       icon: "pen",
-      span: "md:col-span-2 md:row-span-1",
+      span: "lg:col-span-6",
       featured: false,
       href: "#work",
     },

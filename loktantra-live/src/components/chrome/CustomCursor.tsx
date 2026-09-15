@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/motion";
+import { gsap, motionDisabled } from "@/lib/motion";
 
 /**
  * Desktop-only cursor: a small violet ink dot that grows into a ring over
@@ -18,7 +18,7 @@ export function CustomCursor() {
 
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!fine.matches || prefersReducedMotion()) return;
+    if (!fine.matches || motionDisabled()) return;
     setEnabled(true);
   }, []);
 
