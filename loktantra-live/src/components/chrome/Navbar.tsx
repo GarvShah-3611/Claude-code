@@ -10,7 +10,8 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
  * Sticky glass navbar.
  *
  * Transparent over the hero and only frosts once the page has moved, so
- * the hero reads full-bleed on arrival. The mobile sheet traps nothing —
+ * the hero reads full-bleed on arrival. The inline links appear at lg, not
+ * md: at 768px the wordmark, four links and the CTA wrap onto two rows. The mobile sheet traps nothing —
  * it is a plain disclosure that closes on Escape, on navigation, and on
  * resize past the breakpoint.
  */
@@ -28,7 +29,7 @@ export function Navbar() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     const onChange = () => mq.matches && setOpen(false);
     document.addEventListener("keydown", onKey);
     mq.addEventListener("change", onChange);
@@ -56,7 +57,7 @@ export function Navbar() {
           <Wordmark />
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-8 lg:flex">
           {nav.links.map((link) => (
             <li key={link.href}>
               <a
@@ -77,7 +78,7 @@ export function Navbar() {
           {/* Wrapped rather than given a `hidden` class: the button sets
               its own `inline-flex`, and two display utilities in the same
               layer are resolved by stylesheet order, not class order. */}
-          <span className="hidden md:block">
+          <span className="hidden lg:block">
             <MagneticButton href={nav.cta.href} strength={0.2}>
               {nav.cta.label}
             </MagneticButton>
@@ -89,7 +90,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-pill border border-hairline-hi lg:hidden"
           >
             <span aria-hidden className="relative block h-3 w-4">
               <span
@@ -115,7 +116,7 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden md:hidden"
+            className="overflow-hidden lg:hidden"
           >
             <ul className="container-page flex flex-col gap-1 pb-6 pt-2">
               {nav.links.map((link) => (
