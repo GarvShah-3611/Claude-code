@@ -19,7 +19,9 @@
   /* Text */
   --color-newsprint: #f4f1ea; /* 17.08:1 on ink — AAA */
   --color-ash: #9a97a3; /* 6.72:1 on ink — AA */
-  --color-ash-dim: #6f6c79; /* decorative rules only, never text */
+  /* 3.75:1 on ink — fails AA, so never text. Placeholder glyphs, inactive
+     carousel dots, and hairline-adjacent marks only. */
+  --color-ash-dim: #6f6c79;
 
   /* Accent — the voter's indelible ink mark */
   --color-violet: #8b5cf6; /* fills, glows, rules, large numerals */

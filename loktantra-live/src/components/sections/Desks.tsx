@@ -25,7 +25,7 @@ export function Desks() {
                 key={item.id}
                 {...("href" in item && item.href ? { href: item.href } : {})}
                 data-cursor={"href" in item && item.href ? "grow" : undefined}
-                className={`group glass relative flex flex-col justify-between overflow-hidden rounded-card p-6 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-hairline-hi md:p-7 ${item.span} ${
+                className={`group glass relative flex flex-col justify-between overflow-hidden rounded-card p-6 transition-[transform,border-color] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-hairline-hi md:p-7 ${item.span} ${
                   item.featured ? "md:row-span-2" : ""
                 }`}
               >

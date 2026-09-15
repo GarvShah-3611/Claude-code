@@ -6,12 +6,16 @@ import { CustomCursor } from "@/components/chrome/CustomCursor";
 import "./globals.css";
 
 /* Display: a grotesk with enough optical irregularity to read editorial
-   rather than corporate. Variable width axis is used at 90% for headlines. */
+   rather than corporate.
+   No `weight` on purpose — Bricolage is variable (wght 200-800, wdth
+   75-100), so omitting it ships one variable file instead of a static
+   instance per weight. Asking for three weights fetched three files and
+   made fonts the largest thing on the page; it also dropped the wdth axis
+   the headings set to 90%.
+   latin-ext carries the dotless i (U+0131) the wordmark is built on. */
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
-  /* latin-ext carries the dotless i (U+0131) the wordmark is built on. */
-  subsets: ["latin", "latin-ext"],
-  weight: ["600", "700", "800"],
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -27,8 +31,6 @@ const geist = Geist({
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 

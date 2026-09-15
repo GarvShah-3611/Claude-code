@@ -50,7 +50,7 @@ export function Work() {
   };
 
   const field =
-    "w-full rounded-tile border bg-ink/60 px-4 py-3.5 text-newsprint placeholder:text-ash-dim focus:outline-none transition-colors";
+    "w-full rounded-tile border bg-ink/60 px-4 py-3.5 text-newsprint placeholder:text-ash-dim transition-colors";
   const ok = "border-hairline-hi focus:border-violet-light";
   const bad = "border-signal";
 

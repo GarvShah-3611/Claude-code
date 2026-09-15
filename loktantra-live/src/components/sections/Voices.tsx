@@ -89,7 +89,7 @@ export function Voices() {
                       onClick={() => go(i)}
                       aria-label={`Show quote ${i + 1} of ${voices.items.length}`}
                       aria-current={i === index || undefined}
-                      className={`block h-2 rounded-pill transition-all duration-300 ${
+                      className={`block h-2 rounded-pill transition-[width,background-color] duration-300 ${
                         i === index
                           ? "w-7 bg-violet"
                           : "w-2 bg-ash-dim hover:bg-ash"

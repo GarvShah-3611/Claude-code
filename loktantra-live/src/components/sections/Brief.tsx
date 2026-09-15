@@ -91,7 +91,7 @@ export function Brief() {
                       placeholder={brief.placeholder}
                       aria-invalid={!!error}
                       aria-describedby={error ? "brief-error" : undefined}
-                      className={`h-[3.25rem] w-full rounded-pill border bg-ink/60 px-6 text-newsprint placeholder:text-ash-dim focus:outline-none ${
+                      className={`h-[3.25rem] w-full rounded-pill border bg-ink/60 px-6 text-newsprint placeholder:text-ash-dim ${
                         error ? "border-signal" : "border-hairline-hi"
                       }`}
                     />

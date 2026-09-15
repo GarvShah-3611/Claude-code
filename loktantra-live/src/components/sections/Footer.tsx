@@ -24,7 +24,7 @@ export function Footer() {
 
           {footer.columns.map((col) => (
             <nav key={col.heading} aria-label={col.heading}>
-              <h2 className="font-sans text-sm font-normal text-ash-dim">
+              <h2 className="font-sans text-sm font-normal text-ash">
                 {col.heading}
               </h2>
               <ul className="mt-5 space-y-3">
@@ -95,7 +95,7 @@ export function Footer() {
       </div>
 
       <div className="container-page border-t border-hairline py-7">
-        <p className="text-sm text-ash-dim">{footer.legal}</p>
+        <p className="text-sm text-ash">{footer.legal}</p>
       </div>
     </footer>
   );
