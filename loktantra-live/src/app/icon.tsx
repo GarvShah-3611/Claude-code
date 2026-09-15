@@ -3,6 +3,8 @@ import { ImageResponse } from "next/og";
 /** Favicon: the voter's ink mark, which is the whole identity in one dot. */
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
+/* Generated once at build time — required for `output: "export"`. */
+export const dynamic = "force-static";
 
 export default function Icon() {
   return new ImageResponse(

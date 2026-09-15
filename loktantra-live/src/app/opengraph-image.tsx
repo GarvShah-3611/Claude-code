@@ -4,6 +4,8 @@ import { site } from "@/content/site";
 export const alt = `${site.name} — ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+/* Generated once at build time — required for `output: "export"`. */
+export const dynamic = "force-static";
 
 /**
  * Share card. Built from the same tokens as the page so a link preview

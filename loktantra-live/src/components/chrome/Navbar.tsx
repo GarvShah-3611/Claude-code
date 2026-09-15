@@ -10,10 +10,12 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
  * Sticky glass navbar.
  *
  * Transparent over the hero and only frosts once the page has moved, so
- * the hero reads full-bleed on arrival. The inline links appear at lg, not
- * md: at 768px the wordmark, four links and the CTA wrap onto two rows. The mobile sheet traps nothing —
- * it is a plain disclosure that closes on Escape, on navigation, and on
- * resize past the breakpoint.
+ * the hero reads full-bleed on arrival. The inline links appear at lg
+ * rather than md: at 768px the wordmark, four links and the CTA wrap onto
+ * two rows.
+ *
+ * The mobile sheet traps nothing — it is a plain disclosure that closes on
+ * Escape, on navigation, and on resize past the breakpoint.
  */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);

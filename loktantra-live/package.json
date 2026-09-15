@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:offline": "OFFLINE_EXPORT=1 next build && node tools/make-offline.mjs out",
+    "shoot": "node tools/shoot.mjs",
+    "a11y": "node tools/a11y.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

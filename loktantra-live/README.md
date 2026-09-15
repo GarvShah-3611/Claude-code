@@ -206,6 +206,38 @@ next step.
 
 ---
 
+## A self-contained copy
+
+```bash
+npm run build:offline      # -> out/
+```
+
+Produces a static bundle that opens by double-clicking `out/index.html`,
+with no server and no install. Useful for sending the site to someone who
+just wants to look at it.
+
+Two things `tools/make-offline.mjs` does after the export, and why:
+
+- **Inlines the fonts as data URIs.** Relative asset paths get the HTML, CSS
+  and JS loading over `file://`, but browsers apply CORS to fonts even for a
+  file sitting next to the page, so every `@font-face` fetch fails and the
+  design falls back to system type. Embedding them is the only way to keep
+  the real typography offline. The deployed site keeps the fonts as separate
+  files — base64 costs about a third in overhead and lands in critical CSS.
+- **Makes the generated icon and OG image paths relative.** `assetPrefix`
+  does not rewrite metadata routes, so they would resolve against the
+  filesystem root.
+
+The bundle still logs CORS errors for the font *preloads*. They are
+cosmetic — the CSS already carries the fonts. React replays those hints
+from its streamed payload, and editing them out with a regex corrupts the
+payload and silently breaks hydration, so they are left alone.
+
+`OFFLINE_EXPORT=1` is what switches `next.config.ts` into export mode; the
+normal build and every Vercel deploy are unaffected.
+
+---
+
 ## Deploying to Vercel
 
 ```bash
