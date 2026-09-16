@@ -27,6 +27,7 @@ const SECTIONS = [
   "desks",
   "ground",
   "feed",
+  "watch",
   "voices",
   "brief",
   "work",

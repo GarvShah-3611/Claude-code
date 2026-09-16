@@ -20,6 +20,7 @@ export const nav = {
     { label: "The desks", href: "#desks" },
     { label: "Ground reports", href: "#ground" },
     { label: "On the feed", href: "#feed" },
+    { label: "Watchlist", href: "#watch" },
     { label: "Write for us", href: "#work" },
   ],
   cta: { label: "Get the Weekly Brief", href: "#brief" },
@@ -267,6 +268,14 @@ export const work = {
     },
   },
   submit: "Send it over",
+  /** Shown beside the form so a pitch has somewhere to go that is not a form. */
+  direct: {
+    heading: "Or reach the desk directly",
+    name: "Garv Shah",
+    role: "Founding editor",
+    phone: "+91 73097 82696",
+    phoneHref: "tel:+917309782696",
+  },
   submitting: "Sending…",
   success: {
     heading: "Got it",
@@ -278,6 +287,67 @@ export const work = {
     message: "Add a few lines so we know what this is about.",
     messageShort: "A little more detail — at least 20 characters.",
   },
+} as const;
+
+/**
+ * Explainers worth watching, published by other people.
+ *
+ * These are third-party YouTube videos, credited to their channels. They are
+ * deliberately framed as a recommended watchlist, NOT as Loktantra Live's own
+ * work — presenting someone else's reporting as your own is exactly the thing
+ * a fact-first publication cannot do. Video IDs, titles, channels and view
+ * counts were pulled from YouTube rather than invented.
+ */
+export const watch = {
+  eyebrow: "Watchlist",
+  heading: "Explainers worth your evening",
+  blurb:
+    "We did not make these. They are the clearest things we have found on how the republic actually works — credited to the people who made them.",
+  note: "Opens the video here. Nothing loads from YouTube until you press play.",
+  items: [
+    {
+      id: "MvwJ49hGr9s",
+      title: "Lok Sabha and Rajya Sabha, and what actually separates them",
+      channel: "StudyIQ IAS",
+      views: "2.1M views",
+      length: "13:08",
+    },
+    {
+      id: "Bs6YhOqxfeQ",
+      title: "How the Prime Minister of India is actually chosen",
+      channel: "Priya Jain",
+      views: "1.1M views",
+      length: "7:38",
+    },
+    {
+      id: "NKqm9LfI5Qc",
+      title: "India's foreign policy, 1947 to now",
+      channel: "StudyIQ IAS",
+      views: "495K views",
+      length: "14:11",
+    },
+    {
+      id: "mK3UUU-TSAc",
+      title: "Delimitation and the women's quota, and why they are tied together",
+      channel: "StudyIQ IAS",
+      views: "354K views",
+      length: "17:18",
+    },
+    {
+      id: "aRmHV0y46cc",
+      title: "The Indian Parliament in five minutes",
+      channel: "The Polymath",
+      views: "171K views",
+      length: "7:07",
+    },
+    {
+      id: "616FsCeSCYw",
+      title: "How the Indian election system works, in Telugu",
+      channel: "Telugu Badi",
+      views: "738K views",
+      length: "13:01",
+    },
+  ],
 } as const;
 
 export const footer = {
@@ -306,6 +376,13 @@ export const footer = {
     },
   ],
   socials: [{ label: "Instagram", handle: "@loktantralive", href: "https://instagram.com/loktantralive" }],
+  contact: {
+    heading: "Contact",
+    name: "Garv Shah",
+    role: "Founding editor",
+    phone: "+91 73097 82696",
+    phoneHref: "tel:+917309782696",
+  },
   colophon:
     "Set in Bricolage Grotesque and Geist. Built on the subcontinent.",
   legal: `© ${new Date().getFullYear()} Loktantra Live. Corrections stay on the page.`,

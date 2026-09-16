@@ -103,13 +103,12 @@ export function Hero() {
           ))}
         </h1>
 
-        {/* The gavel, tucked into the space the short last line leaves.
-            Below lg it drops under the copy at full width instead. It is
-            draggable, so unlike a decorative visual it keeps its pointer
-            events; z-0 keeps it behind the headline and the CTAs. */}
+        {/* Narrow screens keep the gavel inline, under the copy. From lg up
+            TravellingGavel takes over with a fixed layer that follows the
+            scroll, so this one is hidden rather than duplicated. */}
         <div
           data-fade
-          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:absolute lg:bottom-[-2rem] lg:right-[3.5rem] lg:mt-0 lg:w-[42%] lg:max-w-[30rem]"
+          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:hidden"
         >
           <HeroVisual />
         </div>

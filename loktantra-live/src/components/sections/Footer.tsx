@@ -67,7 +67,18 @@ export function Footer() {
             ))}
           </ul>
 
-          <p className="text-sm text-ash">{footer.colophon}</p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <p className="text-ash">
+              <span className="text-ink">{footer.contact.name}</span>
+              <span className="text-ash"> — {footer.contact.role}</span>
+            </p>
+            <a
+              href={footer.contact.phoneHref}
+              className="text-ash transition-colors hover:text-burgundy"
+            >
+              {footer.contact.phone}
+            </a>
+          </div>
         </div>
       </div>
 
@@ -94,8 +105,9 @@ export function Footer() {
         </svg>
       </div>
 
-      <div className="container-page border-t border-hairline py-7">
+      <div className="container-page flex flex-wrap items-center justify-between gap-3 border-t border-hairline py-7">
         <p className="text-sm text-ash">{footer.legal}</p>
+        <p className="text-sm text-ash">{footer.colophon}</p>
       </div>
     </footer>
   );

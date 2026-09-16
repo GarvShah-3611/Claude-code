@@ -25,39 +25,44 @@ const v2 = (r: number, y: number) => new THREE.Vector2(r, y);
 
 /** The striking head: flat faces, chamfered rims, two incised bands. */
 const HEAD_PROFILE = [
-  v2(0, -1.02),
-  v2(0.26, -1.02),
-  v2(0.37, -0.97),
-  v2(0.4, -0.9),
-  v2(0.4, -0.78),
-  v2(0.365, -0.755),
-  v2(0.365, -0.715),
-  v2(0.4, -0.69),
-  v2(0.4, 0.69),
-  v2(0.365, 0.715),
-  v2(0.365, 0.755),
-  v2(0.4, 0.78),
-  v2(0.4, 0.9),
-  v2(0.37, 0.97),
-  v2(0.26, 1.02),
-  v2(0, 1.02),
+  v2(0, -1.16),
+  v2(0.15, -1.155),
+  v2(0.27, -1.13),
+  v2(0.345, -1.07),
+  v2(0.383, -0.99),
+  v2(0.392, -0.9),
+  v2(0.392, -0.8),
+  v2(0.352, -0.775),
+  v2(0.352, -0.73),
+  v2(0.392, -0.705),
+  v2(0.392, 0.705),
+  v2(0.352, 0.73),
+  v2(0.352, 0.775),
+  v2(0.392, 0.8),
+  v2(0.392, 0.9),
+  v2(0.383, 0.99),
+  v2(0.345, 1.07),
+  v2(0.27, 1.13),
+  v2(0.15, 1.155),
+  v2(0, 1.16),
 ];
 
 /** The handle: a flared neck, a long taper, and a turned end knob. */
 const HANDLE_PROFILE = [
-  v2(0, 0.06),
-  v2(0.17, 0.02),
-  v2(0.155, -0.06),
-  v2(0.125, -0.16),
-  v2(0.113, -0.5),
-  v2(0.106, -1.05),
-  v2(0.112, -1.42),
-  v2(0.134, -1.62),
-  v2(0.166, -1.74),
-  v2(0.172, -1.83),
-  v2(0.15, -1.92),
-  v2(0.1, -1.97),
-  v2(0, -1.99),
+  v2(0, 0.08),
+  v2(0.21, 0.04),
+  v2(0.2, -0.05),
+  v2(0.168, -0.14),
+  v2(0.152, -0.26),
+  v2(0.146, -0.62),
+  v2(0.143, -1.05),
+  v2(0.152, -1.4),
+  v2(0.168, -1.62),
+  v2(0.196, -1.76),
+  v2(0.203, -1.86),
+  v2(0.178, -1.96),
+  v2(0.11, -2.02),
+  v2(0, -2.04),
 ];
 
 /** The sound block the gavel strikes: a squat disc with a chamfered rim. */
@@ -91,37 +96,44 @@ function Gavel() {
 
   return (
     <group ref={group}>
-      {/* Head, laid horizontal and tipped slightly toward the viewer. */}
-      <group position={[0, 0.62, 0]} rotation={[0, 0, Math.PI / 2 - 0.16]}>
-        <mesh castShadow>
-          <latheGeometry args={[HEAD_PROFILE, 96]} />
-          <meshStandardMaterial
-            {...headWood}
-            color="#ffffff"
-            roughness={0.4}
-            metalness={0}
-            envMapIntensity={0.75}
-          />
-        </mesh>
-
-        {/* Pewter bands seated in the incised grooves. Cool metal against a
-            warm wood is what stops the object reading as one plastic blob. */}
-        {[-0.735, 0.735].map((y) => (
-          <mesh key={y} position={[0, y, 0]} castShadow>
-            <cylinderGeometry args={[0.372, 0.372, 0.042, 64]} />
+      {/* The gavel is assembled once in a canonical pose — head along local
+          X, handle straight down local -Y — and then the whole group is laid
+          over. Rotating the head and the handle separately meant juggling
+          two sets of Euler angles that had to agree, and they did not: the
+          handle ended up buried inside the head. */}
+      <group position={[-0.55, -0.27, -0.1]} rotation={[-Math.PI / 2 + 0.2, 0.52, 0]}>
+        {/* Head. The lathe builds along Y, so a quarter turn lays it along
+            the group's X. */}
+        <group rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow receiveShadow>
+            <latheGeometry args={[HEAD_PROFILE, 96]} />
             <meshStandardMaterial
-              color="#a49dae"
-              roughness={0.26}
-              metalness={1}
-              envMapIntensity={1.4}
+              {...headWood}
+              color="#ffffff"
+              roughness={0.4}
+              metalness={0}
+              envMapIntensity={0.75}
             />
           </mesh>
-        ))}
-      </group>
 
-      {/* Handle, hung off the head and swung out to the right. */}
-      <group position={[0, 0.62, 0]} rotation={[0, 0, -0.32]}>
-        <mesh castShadow>
+          {/* Pewter bands seated in the incised grooves. Cool metal against
+              warm wood is what stops the object reading as one plastic
+              blob. */}
+          {[-0.7525, 0.7525].map((y) => (
+            <mesh key={y} position={[0, y, 0]} castShadow>
+              <cylinderGeometry args={[0.359, 0.359, 0.05, 64]} />
+              <meshStandardMaterial
+                color="#a49dae"
+                roughness={0.26}
+                metalness={1}
+                envMapIntensity={1.4}
+              />
+            </mesh>
+          ))}
+        </group>
+
+        {/* Handle, hanging off the head along the group's -Y. */}
+        <mesh castShadow receiveShadow>
           <latheGeometry args={[HANDLE_PROFILE, 64]} />
           <meshStandardMaterial
             {...handleWood}
@@ -133,8 +145,8 @@ function Gavel() {
         </mesh>
       </group>
 
-      {/* Sound block. */}
-      <mesh position={[0, -1.66, 0]} receiveShadow castShadow>
+      {/* Sound block, under the head. */}
+      <mesh position={[-0.78, -1.02, -0.42]} receiveShadow castShadow>
         <latheGeometry args={[BLOCK_PROFILE, 96]} />
         <meshStandardMaterial
           {...blockWood}
@@ -152,7 +164,7 @@ export default function GavelScene() {
   return (
     <Canvas
       shadows
-      camera={{ position: [2.9, 1.55, 5.2], fov: 31 }}
+      camera={{ position: [2.0, 2.0, 6.3], fov: 32 }}
       dpr={[1, 1.75]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
@@ -229,8 +241,8 @@ export default function GavelScene() {
 
       {/* Grounds the object on the ivory page instead of leaving it afloat. */}
       <ContactShadows
-        position={[0, -1.69, 0]}
-        opacity={0.4}
+        position={[0, -1.03, 0]}
+        opacity={0.45}
         scale={9}
         blur={2.6}
         far={3.2}
@@ -247,9 +259,9 @@ export default function GavelScene() {
         autoRotateSpeed={0.9}
         enableZoom={false}
         enablePan={false}
-        minPolarAngle={Math.PI * 0.22}
-        maxPolarAngle={Math.PI * 0.58}
-        target={[0, -0.45, 0]}
+        minPolarAngle={Math.PI * 0.18}
+        maxPolarAngle={Math.PI * 0.52}
+        target={[-0.12, -0.62, 0.25]}
       />
     </Canvas>
   );

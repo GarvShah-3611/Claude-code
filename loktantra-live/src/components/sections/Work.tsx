@@ -62,6 +62,27 @@ export function Work() {
             <SectionHeading label={work.eyebrow} blurb={work.body}>
               {work.heading}
             </SectionHeading>
+
+            {/* A form is not the only way in. A named person with a working
+                number is what makes a small publication feel reachable. */}
+            <div className="reveal mt-10 rounded-card border border-hairline bg-surface p-6">
+              <h3 className="font-sans text-sm font-normal text-ash">
+                {work.direct.heading}
+              </h3>
+              <p className="mt-4 text-[1.25rem] text-ink">{work.direct.name}</p>
+              <p className="mt-1 text-sm text-ash">{work.direct.role}</p>
+              <a
+                href={work.direct.phoneHref}
+                data-cursor="grow"
+                className="group mt-5 inline-flex items-center gap-2.5 rounded-pill border border-hairline-hi px-5 py-2.5 text-[0.9375rem] text-ink transition-colors hover:border-burgundy hover:text-burgundy"
+              >
+                {work.direct.phone}
+                <Icon
+                  name="arrow"
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </a>
+            </div>
           </div>
 
           <div className="glass rounded-card p-6 md:p-10">
