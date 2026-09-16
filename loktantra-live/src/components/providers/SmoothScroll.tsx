@@ -15,6 +15,18 @@ import { registerGsap, motionDisabled, ScrollTrigger, gsap } from "@/lib/motion"
  * Under reduced motion Lenis is not started at all — native scrolling is
  * what that preference asks for.
  */
+/**
+ * The running instance, so a page change can jump the scroll without
+ * fighting Lenis' virtual position. Nothing else should reach for it.
+ */
+let active: Lenis | null = null;
+
+/** Put the viewport at the top the way a real page load would. */
+export function jumpToTop() {
+  if (active) active.scrollTo(0, { immediate: true });
+  else window.scrollTo(0, 0);
+}
+
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
@@ -34,6 +46,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       touchMultiplier: 1.6,
     });
     lenisRef.current = lenis;
+    active = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -52,6 +65,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       window.removeEventListener("load", onLoad);
       lenis.destroy();
       lenisRef.current = null;
+      active = null;
     };
   }, []);
 

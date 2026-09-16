@@ -1,7 +1,7 @@
 # Loktantra Live
 
-Single-page site for a youth-led digital publication covering protest, policy and
-Indian democracy.
+Site for a youth-led digital publication covering protest, policy and Indian
+democracy. Seven click-to-open pages rather than one long scroll.
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · GSAP + ScrollTrigger ·
 Motion · Lenis · React Three Fiber + drei.
@@ -17,6 +17,36 @@ npm run build && npx next start
 > and no animation runs. If the page looks inert, check the console for a failed
 > `_next/hmr` websocket and verify against `npm run build && npx next start`
 > instead. This is not a bug in the site.
+
+---
+
+## Pages
+
+The site is seven pages that open on click. A home page that indexes the desks,
+and six desks behind it:
+
+| Route | Page | Section component |
+|---|---|---|
+| `#/` | Hero, wire ticker, desk index, weekly brief | `Hero`, `WireTicker`, `DeskIndex`, `Brief` |
+| `#/ground` | Ground reports | `GroundReports` |
+| `#/watch` | Watchlist | `Watch` |
+| `#/feed` | On the feed | `Feed` |
+| `#/voices` | Youth Voices | `Voices` |
+| `#/about` | Why we exist | `About` |
+| `#/write` | Write for us | `Work` |
+
+[`PageShell.tsx`](src/components/chrome/PageShell.tsx) owns the switch: one
+`AnimatePresence` crossfade, a jump to the top through Lenis, and a
+`ScrollTrigger.refresh()` once the new page has settled — every scroll-driven
+measurement taken against the previous page's height is wrong the moment the
+route changes.
+
+Routing is a **hash** router ([`src/lib/router.ts`](src/lib/router.ts)), not
+Next's file routing. The site is exported statically and served from a
+subdirectory, so a hard refresh on a real `/ground` path would ask a server that
+is not there. A hash keeps every page bookmarkable, linkable and
+back-button-able with no server at all. To add a page: add its name to `ROUTES`,
+add a `case` to `Page`, and add a nav entry in `site.ts` with that `route`.
 
 ---
 
@@ -100,29 +130,49 @@ node tools/a11y.mjs
 
 ---
 
-## Swapping the imagery
+## Adding photos
 
-The plates in [`NewsroomPlate.tsx`](src/components/ui/NewsroomPlate.tsx) are
-drawn SVG, not photographs. That was a deliberate call: synthetic images that
-read as protest reportage are a credibility risk for a publication whose whole
-pitch is being fact-first. They are abstract on purpose.
+Every illustrated plate is also a photo slot, and **no code changes are needed
+to fill one**. Save a file at the path the slot expects and it replaces the
+drawing on the next build; leave the slot empty and the drawing stays.
 
-To use real photographs, replace the component call with `next/image` at the
-same aspect ratio so nothing shifts:
+| Path (under `public/`) | Slot | Aspect | Suggested size |
+|---|---|---|---|
+| `media/ground/gr-1.jpg` … `gr-4.jpg` | Ground-report cards | 16:10 | 1600 × 1000 |
+| `media/about/newsroom.jpg` | "Why we exist" portrait | 4:5 | 1200 × 1500 |
+| `media/feed/f1.jpg` … `f6.jpg` | On-the-feed tiles | 1:1 | 1200 × 1200 |
+| `media/voices/v1.jpg` … `v4.jpg` | Youth Voices portraits | 1:1 | 600 × 600 |
 
-```tsx
-// Ground report cards — 16/10
-<Image src="/assets/union-election.jpg" alt="…" width={1280} height={800}
-       className="rounded-card border border-hairline" />
+The paths are listed as `photo:` fields in
+[`site.ts`](src/content/site.ts); change the extension there if you want `.webp`
+or `.png` instead of `.jpg`.
 
-// About card — 4/5
-<Image src="/assets/newsroom.jpg" alt="…" width={1000} height={1250}
-       className="rounded-card border border-hairline" />
-```
+A missing file is a designed state, not a broken one. The drawing sits
+underneath the `<img>`, so a load error reveals it with no reflow and no
+broken-image icon — which means you can add photographs one at a time without
+ever leaving a hole in the page. Feed tiles go further and restyle themselves:
+copy is ink-on-lavender with no photo and white-on-scrim once one loads, so
+contrast holds either way.
 
-Put files in `public/assets/`. Write real alt text describing what the photo
-shows — the current `imageAlt` strings describe illustrations and will be wrong
-for a photo.
+Two things to check before committing a photograph:
+
+- **Licence.** Own work, a Creative Commons licence that permits the use, or a
+  stock licence. Record it in [`public/media/CREDITS.md`](public/media/CREDITS.md).
+- **Weight.** Under ~300KB each. There is no image optimiser at runtime — this
+  is a static export, so the file you commit is the file that ships.
+
+Finally, **update the alt text**. The `imageAlt` strings in `site.ts` currently
+describe the illustrations ("Duotone illustration of …") and are wrong for a
+photograph.
+
+### Why the placeholders are drawn, not generated
+
+Synthetic images that read as protest reportage are a credibility risk for a
+publication whose whole pitch is being fact-first, so the placeholders in
+[`NewsroomPlate.tsx`](src/components/ui/NewsroomPlate.tsx) are abstract on
+purpose: geometry in the brand duotone that reads as a subject without
+pretending to document one. Real photographs are the intended end state; that
+is what the slots above are for.
 
 ### The 3D hero
 
@@ -195,16 +245,28 @@ Two Tailwind/GSAP interactions worth knowing before you touch the animations:
 ```bash
 npm run build && npx next start &
 
-node tools/shoot.mjs            # screenshots → ./shots
-node tools/shoot.mjs desks      # just one section
-node tools/a11y.mjs             # axe-core + keyboard + reduced motion
+node tools/shoot-pages.mjs        # every page at 1440 / 768 / 375 → ./shots
+node tools/shoot-pages.mjs feed   # just one page
+node tools/shoot.mjs              # section-by-section framing
+node tools/a11y.mjs               # axe-core + keyboard + reduced motion
 ```
 
-`shoot.mjs` captures each section at 1440 / 768 / 375 plus scrolled viewport
-bands, and reports any console errors — a clean render with a red console is not
-a pass. It takes bands rather than one full-page image on purpose: Chromium's
-capture-beyond-viewport repeats whole sections on a document this tall, which
-looks exactly like a page bug and is not one.
+`shoot-pages.mjs` does a full navigation per route rather than poking the hash,
+which is the thing a hash router can get wrong: it proves a cold entry on a deep
+link renders the right page.
+
+Both shooters capture scrolled viewport bands rather than one full-page image,
+on purpose — Chromium's capture-beyond-viewport repeats whole sections on a tall
+document, which looks exactly like a page bug and is not one. Both report
+console errors too; a clean render with a red console is not a pass.
+
+`a11y.mjs` takes one URL, so run it per page:
+
+```bash
+for r in "/" "/#/ground" "/#/watch" "/#/feed" "/#/voices" "/#/about" "/#/write"; do
+  URL="http://127.0.0.1:3000$r" node tools/a11y.mjs
+done
+```
 
 ### Where things stand
 
@@ -215,8 +277,9 @@ Lighthouse, median of three runs (it varies by a few points per run):
 | Desktop | 100 | 100 | 100 | 100 |
 | Mobile | 90 | 100 | 100 | 100 |
 
-axe-core reports zero WCAG 2.1 AA violations at both widths, with and without
-reduced motion, and every keyboard stop shows a visible focus ring.
+axe-core reports zero WCAG 2.1 AA violations on all seven pages, at both widths,
+with and without reduced motion, and every keyboard stop shows a visible focus
+ring.
 
 Mobile LCP sits at ~3.5s and is the hero headline waiting on the display font —
 that is the remaining lever if you want to push performance higher. Self-hosting

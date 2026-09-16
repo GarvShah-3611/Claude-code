@@ -6,11 +6,16 @@
  * placeholders are deliberately abstract: geometry in the brand's violet
  * duotone that reads as a subject without pretending to document one.
  *
- * Swap any plate for a licensed photograph by replacing the component with
- * next/image at the same aspect ratio — see README, "Swapping the imagery".
+ * Every plate is also a photo slot. Drop a file at the path named by
+ * `photo` into `public/` and it is used instead of the drawing, at the
+ * same aspect ratio and crop; if the file is not there the browser's load
+ * error silently reveals the drawing underneath, so a half-finished set of
+ * photographs never leaves a hole in the page. See README, "Adding photos".
  */
 
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
 
 /** Shared defs: one violet duotone ramp and a grain wash, defined once. */
 function PlateDefs({ id }: { id: string }) {
@@ -55,6 +60,7 @@ function Plate({
   width,
   height,
   children,
+  photo,
   className = "",
 }: {
   id: string;
@@ -64,8 +70,12 @@ function Plate({
   width: number;
   height: number;
   children: ReactNode;
+  photo?: string;
   className?: string;
 }) {
+  const [missing, setMissing] = useState(false);
+  const showPhoto = Boolean(photo) && !missing;
+
   return (
     <div
       className={`relative overflow-hidden rounded-card border border-hairline ${className}`}
@@ -74,8 +84,12 @@ function Plate({
       <svg
         viewBox={viewBox}
         preserveAspectRatio="xMidYMid slice"
-        role="img"
-        aria-label={alt}
+        /* When a photograph is on top, the drawing is decoration behind it
+           and must not announce itself to a screen reader as a second
+           image of the same thing. */
+        role={showPhoto ? "presentation" : "img"}
+        aria-label={showPhoto ? undefined : alt}
+        aria-hidden={showPhoto || undefined}
         className="h-full w-full"
       >
         <PlateDefs id={id} />
@@ -83,12 +97,28 @@ function Plate({
         <g filter={`url(#${id}-grain)`}>{children}</g>
         <rect width={width} height={height} fill={`url(#${id}-flare)`} />
       </svg>
+
+      {photo && (
+        /* Plain <img>, not next/image: this is a static export, so there is
+           no optimiser at runtime to resize through. */
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={photo}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onError={() => setMissing(true)}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+            missing ? "opacity-0" : "opacity-100"
+          }`}
+        />
+      )}
     </div>
   );
 }
 
 /** A newsroom: desks, screens, and figures bent over them. */
-export function NewsroomPlate({ alt }: { alt: string }) {
+export function NewsroomPlate({ alt, photo }: { alt: string; photo?: string }) {
   const id = "nr";
   return (
     <Plate
@@ -98,6 +128,7 @@ export function NewsroomPlate({ alt }: { alt: string }) {
       viewBox="0 0 400 500"
       width={400}
       height={500}
+      photo={photo}
     >
       {/* Back wall: a whiteboard catching the light from the left. */}
       <rect x="46" y="86" width="196" height="132" rx="5" fill="#dccfe4" />
@@ -160,10 +191,12 @@ type StoryVariant = "placards" | "campus" | "colonnade" | "hands";
 export function StoryPlate({
   variant,
   alt,
+  photo,
   className,
 }: {
   variant: StoryVariant;
   alt: string;
+  photo?: string;
   className?: string;
 }) {
   const id = `st-${variant}`;
@@ -310,6 +343,7 @@ export function StoryPlate({
       viewBox="0 0 400 300"
       width={400}
       height={300}
+      photo={photo}
       className={className}
     >
       {art[variant]}

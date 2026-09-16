@@ -19,7 +19,7 @@ export function About() {
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-16">
           <div className="reveal">
-            <NewsroomPlate alt={about.imageAlt} />
+            <NewsroomPlate alt={about.imageAlt} photo={about.photo} />
           </div>
 
           <div>

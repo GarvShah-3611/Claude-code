@@ -15,15 +15,32 @@ export const site = {
   locale: "en_IN",
 } as const;
 
+/** Nav addresses pages now, not scroll anchors. `route` maps to lib/router. */
 export const nav = {
   links: [
-    { label: "The desks", href: "#desks" },
-    { label: "Ground reports", href: "#ground" },
-    { label: "On the feed", href: "#feed" },
-    { label: "Watchlist", href: "#watch" },
-    { label: "Write for us", href: "#work" },
+    { label: "Ground reports", route: "ground" },
+    { label: "Watchlist", route: "watch" },
+    { label: "On the feed", route: "feed" },
+    { label: "Why we exist", route: "about" },
+    { label: "Write for us", route: "write" },
   ],
-  cta: { label: "Get the Weekly Brief", href: "#brief" },
+  cta: { label: "Get the Weekly Brief", route: "write" },
+} as const;
+
+/** The home page's index of desks — each card opens a page. */
+export const home = {
+  eyebrow: "The desks",
+  heading: "Pick a desk",
+  blurb:
+    "Six ways we cover the republic. Every one of them opens on its own page — no endless scrolling for the thing you came for.",
+  cards: [
+    { route: "ground", title: "Ground Reports", body: "Reporting from where it happened — protests, panchayats, picket lines and polling booths.", icon: "pin", count: "4 stories" },
+    { route: "watch", title: "Watchlist", body: "The clearest explainers we have found on how the republic actually works, credited to the people who made them.", icon: "play", count: "6 videos" },
+    { route: "feed", title: "On the feed", body: "Carousels, breakdowns and 60-second reads for the people who find us on Instagram first.", icon: "layers", count: "6 posts" },
+    { route: "voices", title: "Youth Voices", body: "What readers, campus organisers and collaborators say about the work.", icon: "quote", count: "4 voices" },
+    { route: "about", title: "Why we exist", body: "How this started in a hostel common room, and what we will and will not publish.", icon: "building", count: "The story" },
+    { route: "write", title: "Write for us", body: "Pitch a story, send a campus tip, or reach the desk directly. First-time writers are edited, not rejected.", icon: "pen", count: "Open" },
+  ],
 } as const;
 
 export const hero = {
@@ -32,8 +49,8 @@ export const hero = {
   /** Sits directly under the headline. Keep it to two lines at 1440px. */
   subline:
     "Protest, policy, and the pulse of a republic — covered by the generation that has to live with the result. No party line. No press-release journalism.",
-  primaryCta: { label: "Get the Weekly Brief", href: "#brief" },
-  secondaryCta: { label: "Read the latest", href: "#ground" },
+  primaryCta: { label: "Get the Weekly Brief", route: "write" },
+  secondaryCta: { label: "Read the ground reports", route: "ground" },
   /** Shown beneath the CTAs as a quiet credibility line. */
   footnote: "Free every Sunday. 4,100 readers. No spam, no tracking pixels.",
 } as const;
@@ -66,64 +83,9 @@ export const about = {
   ],
   imageAlt:
     "Duotone illustration of a small newsroom: figures at a shared table with laptops and notebooks.",
+  photo: "media/about/newsroom.jpg",
 } as const;
 
-/** Bento grid. `span` drives the desktop grid; order is the mobile order. */
-export const desks = {
-  eyebrow: "The desks",
-  heading: "Six ways we cover the republic",
-  items: [
-    {
-      id: "latest",
-      title: "Latest",
-      body: "Everything we have published, newest first. Updated the moment a story clears its second read.",
-      icon: "clock",
-      span: "lg:col-span-2",
-      featured: false,
-    },
-    {
-      id: "ground",
-      title: "Ground Reports",
-      body: "Reporting from where it happened — protests, panchayats, picket lines and polling booths. We go, we watch, we file.",
-      icon: "pin",
-      span: "lg:col-span-2 lg:row-span-2",
-      featured: true,
-    },
-    {
-      id: "explainers",
-      title: "Explainers",
-      body: "A bill, a judgment, a budget line — broken down against the primary document, with the document linked.",
-      icon: "document",
-      span: "lg:col-span-2",
-      featured: false,
-    },
-    {
-      id: "voices",
-      title: "Youth Voices",
-      body: "Opinion, argument and dissent from readers under thirty. Labelled as opinion, every time.",
-      icon: "quote",
-      span: "lg:col-span-2",
-      featured: false,
-    },
-    {
-      id: "campus",
-      title: "Campus Watch",
-      body: "Fee hikes, union elections, hostel rules and disciplinary orders — tracked across 31 campuses.",
-      icon: "building",
-      span: "lg:col-span-2",
-      featured: false,
-    },
-    {
-      id: "write",
-      title: "Write for Us",
-      body: "Pitch a story. First-time writers are edited, not rejected. We pay for ground reports.",
-      icon: "pen",
-      span: "lg:col-span-6",
-      featured: false,
-      href: "#work",
-    },
-  ],
-} as const;
 
 export const ground = {
   eyebrow: "Ground reports",
@@ -133,6 +95,7 @@ export const ground = {
   items: [
     {
       id: "gr-1",
+      photo: "media/ground/gr-1.jpg",
       kicker: "Student politics",
       title: "Three days inside a union election nobody expected to be close",
       dek: "Two thousand voters, four panels, and a counting hall that stayed open until 3am.",
@@ -145,6 +108,7 @@ export const ground = {
     },
     {
       id: "gr-2",
+      photo: "media/ground/gr-2.jpg",
       kicker: "Campus Watch",
       title: "The hostel fee hike that arrived as a notice board PDF",
       dek: "We filed eleven RTIs across four states. Seven came back. This is what they showed.",
@@ -157,6 +121,7 @@ export const ground = {
     },
     {
       id: "gr-3",
+      photo: "media/ground/gr-3.jpg",
       kicker: "Policy",
       title: "How a private member's bill actually dies",
       dek: "We tracked one from drafting to lapse, and asked the member what the point was.",
@@ -169,6 +134,7 @@ export const ground = {
     },
     {
       id: "gr-4",
+      photo: "media/ground/gr-4.jpg",
       kicker: "Local government",
       title: "The ward that got tired of waiting and fixed its own water supply",
       dek: "A residents' committee, a borewell, and eighteen months of municipal correspondence.",
@@ -190,12 +156,12 @@ export const feed = {
   handle: "@loktantralive",
   handleHref: "https://instagram.com/loktantralive",
   items: [
-    { id: "f1", title: "What a money bill is, and why it matters", type: "carousel", stat: "18.2k" },
-    { id: "f2", title: "Your MP's attendance record, in one chart", type: "chart", stat: "24.7k" },
-    { id: "f3", title: "Reading a budget line without crying", type: "video", stat: "31.5k" },
-    { id: "f4", title: "How to file an RTI in nine steps", type: "carousel", stat: "42.1k" },
-    { id: "f5", title: "Who actually calls a bandh?", type: "video", stat: "12.8k" },
-    { id: "f6", title: "The difference between an ordinance and an act", type: "carousel", stat: "15.3k" },
+    { id: "f1", photo: "media/feed/f1.jpg", title: "What a money bill is, and why it matters", type: "carousel", stat: "18.2k" },
+    { id: "f2", photo: "media/feed/f2.jpg", title: "Your MP's attendance record, in one chart", type: "chart", stat: "24.7k" },
+    { id: "f3", photo: "media/feed/f3.jpg", title: "Reading a budget line without crying", type: "video", stat: "31.5k" },
+    { id: "f4", photo: "media/feed/f4.jpg", title: "How to file an RTI in nine steps", type: "carousel", stat: "42.1k" },
+    { id: "f5", photo: "media/feed/f5.jpg", title: "Who actually calls a bandh?", type: "video", stat: "12.8k" },
+    { id: "f6", photo: "media/feed/f6.jpg", title: "The difference between an ordinance and an act", type: "carousel", stat: "15.3k" },
   ],
 } as const;
 
@@ -205,6 +171,7 @@ export const voices = {
   items: [
     {
       id: "v1",
+      photo: "media/voices/v1.jpg",
       quote:
         "They called the registrar's office before they published, which is more than the three national outlets that ran the same story did.",
       name: "Ananya Rao",
@@ -212,6 +179,7 @@ export const voices = {
     },
     {
       id: "v2",
+      photo: "media/voices/v2.jpg",
       quote:
         "I pitched a piece with no clips and no journalism degree. The edit took nine days and taught me more than a semester did.",
       name: "Imran Qureshi",
@@ -219,6 +187,7 @@ export const voices = {
     },
     {
       id: "v3",
+      photo: "media/voices/v3.jpg",
       quote:
         "We use their explainers in our civics sessions. They are the only ones that link the actual gazette notification.",
       name: "Dr. Meera Nambiar",
@@ -226,6 +195,7 @@ export const voices = {
     },
     {
       id: "v4",
+      photo: "media/voices/v4.jpg",
       quote:
         "Fact-first, genuinely nonpartisan, and young enough to know which rumour is going around before we do.",
       name: "Sahil Dutta",
@@ -303,7 +273,7 @@ export const watch = {
   heading: "Explainers worth your evening",
   blurb:
     "We did not make these. They are the clearest things we have found on how the republic actually works — credited to the people who made them.",
-  note: "Opens the video here. Nothing loads from YouTube until you press play.",
+  note: "Opens on YouTube in a new tab. We do not host or claim any of this work.",
   items: [
     {
       id: "MvwJ49hGr9s",
@@ -356,22 +326,21 @@ export const footer = {
     "Independent, fact-first reporting on youth activism and the state of Indian democracy.",
   columns: [
     {
-      heading: "Sections",
+      heading: "Pages",
       links: [
-        { label: "Latest", href: "#desks" },
-        { label: "Ground Reports", href: "#ground" },
-        { label: "Explainers", href: "#desks" },
-        { label: "Youth Voices", href: "#desks" },
-        { label: "Campus Watch", href: "#desks" },
+        { label: "Ground Reports", href: "#/ground" },
+        { label: "Watchlist", href: "#/watch" },
+        { label: "On the feed", href: "#/feed" },
+        { label: "Youth Voices", href: "#/voices" },
       ],
     },
     {
       heading: "About",
       links: [
-        { label: "Why we exist", href: "#about" },
-        { label: "Write for us", href: "#work" },
-        { label: "Corrections policy", href: "#" },
-        { label: "Funding and ethics", href: "#" },
+        { label: "Why we exist", href: "#/about" },
+        { label: "Write for us", href: "#/write" },
+        { label: "Corrections policy", href: "#/about" },
+        { label: "Funding and ethics", href: "#/about" },
       ],
     },
   ],

@@ -5,6 +5,7 @@ import { m, AnimatePresence } from "motion/react";
 import { voices } from "@/content/site";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
+import { Portrait } from "@/components/ui/Portrait";
 import { registerGsap, revealChildren } from "@/lib/motion";
 
 /**
@@ -71,9 +72,12 @@ export function Voices() {
                   <p className="font-serif text-[1.375rem] leading-snug text-ink md:text-[1.875rem]">
                     {current.quote}
                   </p>
-                  <footer className="mt-7 text-[0.9375rem]">
-                    <span className="text-ink">{current.name}</span>
-                    <span className="text-ash"> — {current.role}</span>
+                  <footer className="mt-7 flex items-center gap-3.5 text-[0.9375rem]">
+                    <Portrait name={current.name} photo={current.photo} />
+                    <span>
+                      <span className="block text-ink">{current.name}</span>
+                      <span className="block text-ash">{current.role}</span>
+                    </span>
                   </footer>
                 </m.blockquote>
               </AnimatePresence>

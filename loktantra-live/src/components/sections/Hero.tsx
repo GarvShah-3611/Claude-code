@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { hero } from "@/content/site";
+import { hrefFor, type Route } from "@/lib/router";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { HeroVisual } from "@/components/three/HeroVisual";
 import { gsap, registerGsap, motionDisabled, DUR, EASE } from "@/lib/motion";
@@ -60,7 +61,6 @@ export function Hero() {
   return (
     <section
       ref={root}
-      id="main"
       data-hero="idle"
       className="relative overflow-hidden pb-20 pt-32 md:pb-28 md:pt-40 lg:pb-32"
     >
@@ -103,12 +103,12 @@ export function Hero() {
           ))}
         </h1>
 
-        {/* Narrow screens keep the gavel inline, under the copy. From lg up
-            TravellingGavel takes over with a fixed layer that follows the
-            scroll, so this one is hidden rather than duplicated. */}
+        {/* The gavel lives here at every width now. The travelling version
+            was choreographed against one long scroll; with click-pages
+            there is no journey for it to follow. */}
         <div
           data-fade
-          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:hidden"
+          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:absolute lg:bottom-[-1rem] lg:right-[3.5rem] lg:mt-0 lg:w-[40%] lg:max-w-[28rem]"
         >
           <HeroVisual />
         </div>
@@ -119,10 +119,10 @@ export function Hero() {
           </p>
 
           <div data-fade className="hero-fade mt-9 flex flex-wrap items-center gap-3">
-            <MagneticButton href={hero.primaryCta.href}>
+            <MagneticButton href={hrefFor(hero.primaryCta.route as Route)}>
               {hero.primaryCta.label}
             </MagneticButton>
-            <MagneticButton href={hero.secondaryCta.href} variant="ghost">
+            <MagneticButton href={hrefFor(hero.secondaryCta.route as Route)} variant="ghost">
               {hero.secondaryCta.label}
             </MagneticButton>
           </div>

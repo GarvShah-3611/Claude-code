@@ -47,9 +47,10 @@ export function Watch() {
         <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {watch.items.map((item) => (
             <li key={item.id} className="reveal">
-              <button
-                type="button"
-                onClick={() => setOpen(item)}
+              <a
+                href={`https://www.youtube.com/watch?v=${item.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 data-cursor="grow"
                 className="group w-full overflow-hidden rounded-card border border-hairline bg-surface text-left transition-[transform,box-shadow] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(36,21,32,0.28)]"
               >
@@ -101,8 +102,8 @@ export function Watch() {
                     {item.views}
                   </span>
                 </span>
-                <span className="sr-only">Play video</span>
-              </button>
+                <span className="sr-only">Watch on YouTube, opens in a new tab</span>
+              </a>
             </li>
           ))}
         </ul>

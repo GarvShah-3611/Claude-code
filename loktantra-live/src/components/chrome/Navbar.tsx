@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { nav } from "@/content/site";
+import { useRoute, hrefFor, type Route } from "@/lib/router";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 
@@ -20,6 +21,7 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [route] = useRoute();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -55,21 +57,29 @@ export function Navbar() {
         aria-label="Primary"
         className="container-page flex h-[4.5rem] items-center justify-between gap-6"
       >
-        <a href="#main" className="shrink-0 text-[1.0625rem] text-ink">
+        <a href={hrefFor("home")} className="shrink-0 text-[1.0625rem] text-ink">
           <Wordmark />
         </a>
 
         <ul className="hidden items-center gap-8 lg:flex">
           {nav.links.map((link) => (
-            <li key={link.href}>
+            <li key={link.route}>
               <a
-                href={link.href}
-                className="group relative text-[0.9375rem] text-ash transition-colors duration-200 hover:text-ink"
+                href={hrefFor(link.route as Route)}
+                aria-current={route === link.route ? "page" : undefined}
+                className={`group relative text-[0.9375rem] transition-colors duration-200 hover:text-ink ${
+                  route === link.route ? "text-ink" : "text-ash"
+                }`}
               >
                 {link.label}
+                {/* The rule is full width on the current page and grows in on
+                    hover, so the nav shows where you are, not just where you
+                    could go. */}
                 <span
                   aria-hidden
-                  className="absolute -bottom-1.5 left-0 h-px w-0 bg-burgundy transition-[width] duration-300 ease-[var(--ease-out-soft)] group-hover:w-full"
+                  className={`absolute -bottom-1.5 left-0 h-px bg-burgundy transition-[width] duration-300 ease-[var(--ease-out-soft)] group-hover:w-full ${
+                    route === link.route ? "w-full" : "w-0"
+                  }`}
                 />
               </a>
             </li>
@@ -81,7 +91,7 @@ export function Navbar() {
               its own `inline-flex`, and two display utilities in the same
               layer are resolved by stylesheet order, not class order. */}
           <span className="hidden lg:block">
-            <MagneticButton href={nav.cta.href} strength={0.2}>
+            <MagneticButton href={hrefFor(nav.cta.route as Route)} strength={0.2}>
               {nav.cta.label}
             </MagneticButton>
           </span>
@@ -122,11 +132,14 @@ export function Navbar() {
           >
             <ul className="container-page flex flex-col gap-1 pb-6 pt-2">
               {nav.links.map((link) => (
-                <li key={link.href}>
+                <li key={link.route}>
                   <a
-                    href={link.href}
+                    href={hrefFor(link.route as Route)}
                     onClick={() => setOpen(false)}
-                    className="block border-b border-hairline py-4 font-display text-2xl text-ink"
+                    aria-current={route === link.route ? "page" : undefined}
+                    className={`block border-b border-hairline py-4 font-display text-2xl ${
+                      route === link.route ? "text-burgundy" : "text-ink"
+                    }`}
                   >
                     {link.label}
                   </a>
@@ -134,7 +147,7 @@ export function Navbar() {
               ))}
               <li className="pt-5">
                 <a
-                  href={nav.cta.href}
+                  href={hrefFor(nav.cta.route as Route)}
                   onClick={() => setOpen(false)}
                   className="block rounded-pill bg-burgundy px-6 py-3.5 text-center font-medium on-burgundy"
                 >

@@ -102,7 +102,11 @@ export function GroundReports() {
               <a href={item.href} className="block" data-cursor="grow">
                 <div className="overflow-hidden rounded-card">
                   <div className="transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.03]">
-                    <StoryPlate variant={VARIANTS[i % VARIANTS.length]} alt={item.imageAlt} />
+                    <StoryPlate
+                      variant={VARIANTS[i % VARIANTS.length]}
+                      alt={item.imageAlt}
+                      photo={item.photo}
+                    />
                   </div>
                 </div>
 
