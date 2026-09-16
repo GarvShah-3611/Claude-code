@@ -62,7 +62,10 @@ export function Hero() {
     <section
       ref={root}
       data-hero="idle"
-      className="relative overflow-hidden pb-20 pt-32 md:pb-28 md:pt-40 lg:pb-32"
+      /* The fixed navbar already reserves 4.5rem on <main>, so the old
+          pt-32 put 200px of nothing above the badge. In a narrow embed that
+          alone pushed the subline and both CTAs under the fold. */
+      className="relative overflow-hidden pb-16 pt-12 md:pb-24 md:pt-16 lg:pb-32 lg:pt-24"
     >
       {/* Light leaks. Two only, both off-centre, so the background has a
           direction of light rather than an even wash. */}
@@ -78,7 +81,7 @@ export function Hero() {
       <div className="container-page relative">
         <p
           data-fade
-          className="hero-fade mb-7 inline-flex items-center gap-2.5 rounded-pill border border-hairline-hi py-1.5 pl-2.5 pr-4 text-sm text-ash"
+          className="hero-fade mb-6 inline-flex items-center gap-2.5 rounded-pill border border-hairline-hi py-1.5 pl-2.5 pr-4 text-sm text-ash"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
@@ -105,20 +108,24 @@ export function Hero() {
 
         {/* The gavel lives here at every width now. The travelling version
             was choreographed against one long scroll; with click-pages
-            there is no journey for it to follow. */}
+            there is no journey for it to follow.
+
+            Stacked, it is deliberately smaller than it was: the box is
+            square, so every pixel of width costs a pixel of height, and at
+            22rem it ate the rest of the fold on its own. */}
         <div
           data-fade
-          className="hero-fade relative z-0 mx-auto mt-10 w-[78%] max-w-[22rem] lg:absolute lg:bottom-[-1rem] lg:right-[3.5rem] lg:mt-0 lg:w-[40%] lg:max-w-[28rem]"
+          className="hero-fade relative z-0 mx-auto -my-4 w-[58%] max-w-[15rem] sm:max-w-[17rem] lg:absolute lg:bottom-[-1rem] lg:right-[3.5rem] lg:my-0 lg:w-[40%] lg:max-w-[28rem]"
         >
           <HeroVisual />
         </div>
 
-        <div className="relative z-10 mt-10 max-w-xl lg:mt-12">
+        <div className="relative z-10 mt-6 max-w-xl lg:mt-12">
           <p data-fade className="hero-fade text-lead text-ash">
             {hero.subline}
           </p>
 
-          <div data-fade className="hero-fade mt-9 flex flex-wrap items-center gap-3">
+          <div data-fade className="hero-fade mt-7 flex flex-wrap items-center gap-3">
             <MagneticButton href={hrefFor(hero.primaryCta.route as Route)}>
               {hero.primaryCta.label}
             </MagneticButton>
@@ -127,7 +134,7 @@ export function Hero() {
             </MagneticButton>
           </div>
 
-          <p data-fade className="hero-fade mt-6 text-sm text-ash">
+          <p data-fade className="hero-fade mt-5 text-sm text-ash">
             {hero.footnote}
           </p>
         </div>

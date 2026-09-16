@@ -1,41 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { m, AnimatePresence } from "motion/react";
+import { useState } from "react";
 import { watch } from "@/content/site";
 import { RevealSection } from "@/components/ui/RevealSection";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
 
-type Item = (typeof watch.items)[number];
-
 /**
  * Real video, from other people's channels, credited.
  *
- * Facade pattern: the card shows YouTube's own thumbnail and only swaps in
- * the iframe once someone presses play. That keeps YouTube's player and its
- * cookies off the page for anyone who never watches, and keeps the section
- * from costing half a megabyte on load.
+ * Every card is a link out to YouTube rather than an embedded player. An
+ * in-page lightbox was the nicer design and it cannot work here: the site
+ * is served inside a sandboxed frame whose policy refuses a third-party
+ * embed, so the player would have failed silently wherever it was actually
+ * being read. A link that opens the video is worse in theory and works.
  *
- * `youtube-nocookie.com` for the same reason. The thumbnails come straight
- * from i.ytimg.com, so they are the real frames, not stand-ins.
+ * Thumbnails come from i.ytimg.com — the real frames, not stand-ins — but
+ * that same policy can refuse a remote image too, and a reader on a network
+ * that blocks YouTube is in the same position. So the missing state is a
+ * designed plate rather than a blank box; see ThumbPlate below.
  */
 export function Watch() {
-  const [open, setOpen] = useState<Item | null>(null);
-  /** Thumbnails that failed to load, so a blocked network never shows a
-      broken-image icon — the card falls back to its own gradient. */
+  /** Thumbnails that failed to load. */
   const [broken, setBroken] = useState<Record<string, true>>({});
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
   return (
     <RevealSection id="watch" className="py-24 md:py-32" stagger={0.05}>
@@ -59,10 +46,7 @@ export function Watch() {
                       a statically exported site, and the intrinsic size is
                       known so there is no layout shift either way. */}
                   {broken[item.id] ? (
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 bg-[radial-gradient(120%_120%_at_25%_0%,rgba(195,176,223,0.75),rgba(122,30,60,0.18))]"
-                    />
+                    <ThumbPlate channel={item.channel} />
                   ) : (
                     <img
                       src={`https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`}
@@ -111,58 +95,53 @@ export function Watch() {
         <p className="reveal mt-8 text-sm text-ash">{watch.note}</p>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <m.div
-            className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/80 p-4 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setOpen(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={open.title}
-          >
-            <m.div
-              className="w-full max-w-4xl"
-              initial={{ scale: 0.95, y: 12 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.97, y: 8 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="overflow-hidden rounded-card bg-ink shadow-2xl">
-                <div className="aspect-video">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${open.id}?autoplay=1&rel=0`}
-                    title={open.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="h-full w-full border-0"
-                  />
-                </div>
-              </div>
-              <div className="mt-4 flex items-start justify-between gap-6">
-                <p className="text-paper">
-                  <span className="block">{open.title}</span>
-                  <span className="mt-1 block text-sm text-lavender">
-                    {open.channel} · {open.views}
-                  </span>
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setOpen(null)}
-                  className="shrink-0 rounded-pill border border-paper/30 px-4 py-2 text-sm text-paper transition-colors hover:border-paper"
-                  autoFocus
-                >
-                  Close
-                </button>
-              </div>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
     </RevealSection>
+  );
+}
+
+/**
+ * What a card shows when YouTube's thumbnail cannot be fetched.
+ *
+ * A bare gradient reads as a failure — six grey boxes look like a broken
+ * page, not a design. This borrows the concentric rings the site already
+ * uses for end grain on the gavel's sound block and on the ground-report
+ * plates, so a card with no thumbnail still looks like it belongs here, and
+ * names the channel it is crediting instead of showing nothing.
+ */
+function ThumbPlate({ channel }: { channel: string }) {
+  return (
+    <span aria-hidden className="absolute inset-0">
+      <svg
+        viewBox="0 0 480 270"
+        preserveAspectRatio="xMidYMid slice"
+        className="h-full w-full"
+      >
+        <defs>
+          <linearGradient id="lkw-plate" x1="0" y1="0" x2="0.7" y2="1">
+            <stop offset="0%" stopColor="#e3d6e7" />
+            <stop offset="58%" stopColor="#c9b6de" />
+            <stop offset="100%" stopColor="#8e5f86" />
+          </linearGradient>
+        </defs>
+        <rect width="480" height="270" fill="url(#lkw-plate)" />
+        {[188, 142, 96, 50].map((r, i) => (
+          <circle
+            key={r}
+            cx="150"
+            cy="135"
+            r={r}
+            fill="none"
+            stroke="#7a1e3c"
+            strokeWidth="1.5"
+            opacity={0.1 + i * 0.045}
+          />
+        ))}
+      </svg>
+      {/* Bottom-left, clear of the centred play button and the duration
+          chip in the opposite corner. */}
+      <span className="absolute bottom-3 left-4 text-xs uppercase tracking-[0.12em] text-burgundy-deep/75">
+        {channel}
+      </span>
+    </span>
   );
 }

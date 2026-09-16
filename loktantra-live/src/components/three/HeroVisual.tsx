@@ -12,9 +12,16 @@ const GavelScene = dynamic(() => import("./GavelScene"), {
 /**
  * Decides whether this device gets the 3D scene at all.
  *
- * The scene loads only when the viewport is wide, the device reports
- * enough cores, the pointer is fine, motion is not reduced, and the hero
- * is actually on screen. Everything else keeps the static fallback, which
+ * The gate is about the machine, not the window. It used to require
+ * min-width 768px as a proxy for "not a phone", but `hover: hover` and
+ * `pointer: fine` already say that far more directly — and the width test
+ * was excluding a case that matters: the site framed in a narrow panel on
+ * a perfectly capable desktop, which got the flat fallback and therefore
+ * never showed the 3D gavel to anyone viewing it that way.
+ *
+ * What is left is a real capability test: a fine pointer, enough cores,
+ * motion not reduced, a box big enough to be worth a canvas, and the hero
+ * actually on screen. Everything else keeps the static fallback, which
  * occupies the identical box so the layout never shifts between them.
  */
 export function HeroVisual() {
@@ -26,9 +33,12 @@ export function HeroVisual() {
     if (!el) return;
 
     const capable =
-      window.matchMedia("(min-width: 768px) and (hover: hover)").matches &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-      (navigator.hardwareConcurrency ?? 2) >= 4;
+      (navigator.hardwareConcurrency ?? 2) >= 4 &&
+      // Below this the gavel is too small to read as an object and the
+      // canvas is not worth the GPU.
+      el.getBoundingClientRect().width >= 200;
 
     if (!capable) return;
 
